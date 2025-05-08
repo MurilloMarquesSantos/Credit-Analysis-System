@@ -1,0 +1,48 @@
+1. Auth/User-Service (porta 8081)
+🔹 Responsável por:
+
+Login tradicional e social (OAuth2 + JWT)
+
+Cadastro e gerenciamento de usuários
+
+Endpoints REST de entrada (propostas, histórico, etc.)
+
+Comunicação com os outros serviços (REST + RabbitMQ)
+
+2. Proposal-Service (8082)
+🔹 Responsável por:
+
+Receber proposta (REST ou via fila)
+
+Salvar proposta (opcional, se quiser manter histórico por aqui)
+
+Iniciar fluxo de análise via RabbitMQ
+
+Retornar decisão para o 8081 (opcionalmente via fila ou REST)
+
+3. Credit-Analysis-Service (8083)
+🔹 Responsável por:
+
+Aplicar regras de negócio para avaliar a proposta
+
+Estratégias diferentes para perfis (padrão Strategy)
+
+Retornar decisão via RabbitMQ para o Proposal-Service
+
+4. Notification-Service (8084)
+🔹 Responsável por:
+
+Enviar e-mail com decisão (via AWS SES)
+
+(Opcional) Enviar SMS via AWS SNS
+
+Ativado por eventos (RabbitMQ)
+
+5. Document-Service (8085)
+🔹 Responsável por:
+
+Upload e organização de documentos (comprovantes, etc.)
+
+Integração com AWS S3
+
+Pode usar padrão Factory para tratar diferentes tipos de documento
