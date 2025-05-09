@@ -35,14 +35,9 @@ public class SecurityConfig {
     public SecurityConfig(
             @Value("${PRIVATE_KEY}") String privateKey64,
             @Value("${PUBLIC_KEY}") String publicKey64) throws Exception {
-
         KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-
-        byte[] privateBytes = Base64.getDecoder().decode(privateKey64);
-        byte[] publicBytes = Base64.getDecoder().decode(publicKey64);
-
-        this.privateKey = (RSAPrivateKey) keyFactory.generatePrivate(new PKCS8EncodedKeySpec(privateBytes));
-        this.publicKey = (RSAPublicKey) keyFactory.generatePublic(new X509EncodedKeySpec(publicBytes));
+        this.privateKey = loadPrivateKey(privateKey64, keyFactory);
+        this.publicKey = loadPublicKey(publicKey64, keyFactory);
     }
 
     @Bean
@@ -82,5 +77,15 @@ public class SecurityConfig {
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    private RSAPrivateKey loadPrivateKey(String privateKey64, KeyFactory keyFactory) throws Exception {
+        byte[] privateBytes = Base64.getDecoder().decode(privateKey64);
+        return (RSAPrivateKey) keyFactory.generatePrivate(new PKCS8EncodedKeySpec(privateBytes));
+    }
+
+    private RSAPublicKey loadPublicKey(String publicKey64, KeyFactory keyFactory) throws Exception {
+        byte[] publicBytes = Base64.getDecoder().decode(publicKey64);
+        return (RSAPublicKey) keyFactory.generatePublic(new X509EncodedKeySpec(publicBytes));
     }
 }
