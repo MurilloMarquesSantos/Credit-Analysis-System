@@ -1,7 +1,9 @@
 package system.dev.marques.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import system.dev.marques.domain.Roles;
 import system.dev.marques.domain.User;
 import system.dev.marques.domain.dto.*;
 import system.dev.marques.mapper.UserMapper;
@@ -9,6 +11,7 @@ import system.dev.marques.strategy.user.enable.UserEnableStrategy;
 import system.dev.marques.repository.UserRepository;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -20,8 +23,12 @@ public class UserService {
 
     private final UserMapper mapper;
 
+    private final PasswordEncoder passwordEncoder;
+
     public UserResponse save(UserRequest request) {
         User user = mapper.toUser(request);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRoles(Set.of(new Roles(1L, "ADMIN")));
         User savedUser = repository.save(user);
         return mapper.toUserResponse(savedUser);
     }
@@ -48,7 +55,7 @@ public class UserService {
 
 //        user.setPassword(encode);
 
-        user.setEnabled(true);
+        user.setValid(true);
 
         User savedUser = repository.save(user);
 

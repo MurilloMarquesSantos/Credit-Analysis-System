@@ -20,13 +20,13 @@ public interface UserMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "email", ignore = true)
     @Mapping(target = "roles", ignore = true)
-    @Mapping(target = "enabled", ignore = true)
+    @Mapping(target = "valid", ignore = true)
     void updateUserFromGoogleRequest(UserRequestGoogle request, @MappingTarget User user);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "email", ignore = true)
     @Mapping(target = "roles", ignore = true)
-    @Mapping(target = "enabled", ignore = true)
+    @Mapping(target = "valid", ignore = true)
     @Mapping(target = "password", ignore = true)
     @Mapping(target = "phoneNumber", ignore = true)
     @Mapping(target = "name", ignore = true)
