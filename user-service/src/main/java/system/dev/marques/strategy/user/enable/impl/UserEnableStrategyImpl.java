@@ -1,26 +1,25 @@
-package system.dev.marques.patterns.enabling;
+package system.dev.marques.strategy.user.enable.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import system.dev.marques.domain.User;
-import system.dev.marques.domain.dto.UserRequestGoogle;
+import system.dev.marques.domain.dto.UserEnableRequest;
 import system.dev.marques.mapper.UserMapper;
+import system.dev.marques.strategy.user.enable.UserEnableStrategy;
 
 @Component
 @RequiredArgsConstructor
-public class GoogleEnableStrategyImpl implements UserEnableStrategy {
+public class UserEnableStrategyImpl implements UserEnableStrategy {
 
     private final UserMapper mapper;
 
-
-
     @Override
     public boolean supports(Object request) {
-        return request instanceof UserRequestGoogle;
+        return request instanceof UserEnableRequest;
     }
 
     @Override
     public void updateUser(Object request, User user) {
-        mapper.updateUserFromGoogleRequest((UserRequestGoogle) request, user);
+        mapper.updateUserFromUserEnableRequest((UserEnableRequest) request, user);
     }
 }

@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import system.dev.marques.domain.User;
 import system.dev.marques.domain.dto.*;
 import system.dev.marques.mapper.UserMapper;
-import system.dev.marques.patterns.enabling.UserEnableStrategy;
+import system.dev.marques.strategy.user.enable.UserEnableStrategy;
 import system.dev.marques.repository.UserRepository;
 
 import java.util.List;

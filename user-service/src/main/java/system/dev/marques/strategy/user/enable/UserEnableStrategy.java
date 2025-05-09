@@ -1,4 +1,4 @@
-package system.dev.marques.patterns.enabling;
+package system.dev.marques.strategy.user.enable;
 
 
 import system.dev.marques.domain.User;
