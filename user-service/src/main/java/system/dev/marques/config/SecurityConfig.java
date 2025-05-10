@@ -7,6 +7,7 @@ import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -18,6 +19,7 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
+import system.dev.marques.config.google.SocialLoginSuccessHandler;
 
 import java.security.KeyFactory;
 import java.security.interfaces.RSAPrivateKey;
@@ -42,14 +44,17 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, JwtValidationFilter jwtValidationFilter) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, JwtValidationFilter jwtValidationFilter,
+                                           SocialLoginSuccessHandler successHandler) throws Exception {
         http.authorizeHttpRequests(auth -> auth
-//                        .requestMatchers("/home/create").permitAll()
                         .anyRequest().authenticated())
                 .formLogin(form -> form.loginPage("/login").permitAll())
                 .csrf(AbstractHttpConfigurer::disable)
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())))
+                .oauth2Login((o2 ->
+                        o2.loginPage("/login")
+                                .successHandler(successHandler)))
                 .addFilterAfter(jwtValidationFilter, BearerTokenAuthenticationFilter.class);
 
         return http.build();

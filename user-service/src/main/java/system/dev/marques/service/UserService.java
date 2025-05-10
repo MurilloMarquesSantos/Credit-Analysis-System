@@ -1,9 +1,9 @@
 package system.dev.marques.service;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.BadRequestException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import system.dev.marques.domain.Roles;
 import system.dev.marques.domain.User;
 import system.dev.marques.domain.dto.requests.UserEnableRequest;
 import system.dev.marques.domain.dto.requests.UserRequest;
@@ -12,12 +12,13 @@ import system.dev.marques.domain.dto.responses.TokenLoginResponse;
 import system.dev.marques.domain.dto.responses.UserEnabledResponse;
 import system.dev.marques.domain.dto.responses.UserResponse;
 import system.dev.marques.mapper.UserMapper;
-import system.dev.marques.strategy.user.enable.UserEnableStrategy;
 import system.dev.marques.repository.UserRepository;
+import system.dev.marques.strategy.user.enable.UserEnableStrategy;
 
 import java.security.Principal;
+import java.util.Collections;
 import java.util.List;
-import java.util.Set;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +34,8 @@ public class UserService {
 
     private final TokenService tokenService;
 
+    private final RolesService rolesService;
+
     public UserResponse saveUser(UserRequest request) {
         User user = mapper.toUser(request);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -40,13 +43,13 @@ public class UserService {
         return mapper.toUserResponse(savedUser);
     }
 
-    public UserResponse saveAdmin(UserRequest request) {
+    public UserResponse saveAdmin(UserRequest request) throws BadRequestException {
         User user = mapper.toUser(request);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRoles(Set.of(new Roles(1L, "ADMIN")));
+        prepareUserAdmin(user);
         User savedUser = repository.save(user);
         return mapper.toUserResponse(savedUser);
     }
+
 
     public UserEnabledResponse enableUserFromGoogle(UserRequestGoogle request, Long id) throws Exception {
         return enableUserInternal(request, id);
@@ -81,6 +84,17 @@ public class UserService {
 
         return tokenService.generateToken(user);
     }
+
+    private void prepareUserAdmin(User user) throws BadRequestException {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRoles(Collections.singleton(rolesService.getRoleByName("ADMIN")));
+        user.setValid(true);
+    }
+
+    public Optional<User> findByEmail(String email) {
+        return repository.findUserByEmail(email);
+    }
+
 
 
 }

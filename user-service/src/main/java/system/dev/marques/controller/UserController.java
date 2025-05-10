@@ -1,6 +1,7 @@
 package system.dev.marques.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
@@ -27,7 +28,7 @@ public class UserController {
     }
 
     @PostMapping("/create-admin")
-    public ResponseEntity<UserResponse> createAdmin(@RequestBody UserRequest userRequest) {
+    public ResponseEntity<UserResponse> createAdmin(@RequestBody UserRequest userRequest) throws BadRequestException {
         return new ResponseEntity<>(userService.saveAdmin(userRequest), HttpStatus.CREATED);
     }
 
