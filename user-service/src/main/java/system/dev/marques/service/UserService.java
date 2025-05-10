@@ -33,7 +33,14 @@ public class UserService {
 
     private final TokenService tokenService;
 
-    public UserResponse save(UserRequest request) {
+    public UserResponse saveUser(UserRequest request) {
+        User user = mapper.toUser(request);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        User savedUser = repository.save(user);
+        return mapper.toUserResponse(savedUser);
+    }
+
+    public UserResponse saveAdmin(UserRequest request) {
         User user = mapper.toUser(request);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRoles(Set.of(new Roles(1L, "ADMIN")));
@@ -60,8 +67,6 @@ public class UserService {
                 .orElseThrow(() -> new IllegalArgumentException("No strategy found for request: " + request));
 
         strategy.updateUser(request, user);
-
-//        user.setPassword(encode);
 
         user.setValid(true);
 
