@@ -7,8 +7,8 @@ import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.web.bind.annotation.*;
-import system.dev.marques.domain.dto.UserRequest;
-import system.dev.marques.domain.dto.UserResponse;
+import system.dev.marques.domain.dto.requests.UserRequest;
+import system.dev.marques.domain.dto.responses.UserResponse;
 import system.dev.marques.service.UserService;
 
 import java.time.Instant;

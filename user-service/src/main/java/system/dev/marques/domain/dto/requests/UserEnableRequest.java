@@ -1,4 +1,4 @@
-package system.dev.marques.domain.dto;
+package system.dev.marques.domain.dto.requests;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

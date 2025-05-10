@@ -1,23 +1,21 @@
-package system.dev.marques.domain.dto;
+package system.dev.marques.domain.dto.responses;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.br.CPF;
 
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
-public class UserRequestGoogle {
+public class UserResponse {
+
+    private Long id;
 
     private String name;
 
-    @CPF
-    private String cpf;
+    private String email;
 
     private String phoneNumber;
-
-    private Double income;
 
     private String password;
 }

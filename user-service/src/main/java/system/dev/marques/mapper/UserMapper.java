@@ -4,7 +4,11 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import system.dev.marques.domain.User;
-import system.dev.marques.domain.dto.*;
+import system.dev.marques.domain.dto.requests.UserEnableRequest;
+import system.dev.marques.domain.dto.requests.UserRequest;
+import system.dev.marques.domain.dto.requests.UserRequestGoogle;
+import system.dev.marques.domain.dto.responses.UserEnabledResponse;
+import system.dev.marques.domain.dto.responses.UserResponse;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {

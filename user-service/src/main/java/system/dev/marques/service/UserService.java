@@ -5,11 +5,17 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import system.dev.marques.domain.Roles;
 import system.dev.marques.domain.User;
-import system.dev.marques.domain.dto.*;
+import system.dev.marques.domain.dto.requests.UserEnableRequest;
+import system.dev.marques.domain.dto.requests.UserRequest;
+import system.dev.marques.domain.dto.requests.UserRequestGoogle;
+import system.dev.marques.domain.dto.responses.TokenLoginResponse;
+import system.dev.marques.domain.dto.responses.UserEnabledResponse;
+import system.dev.marques.domain.dto.responses.UserResponse;
 import system.dev.marques.mapper.UserMapper;
 import system.dev.marques.strategy.user.enable.UserEnableStrategy;
 import system.dev.marques.repository.UserRepository;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Set;
 
@@ -24,6 +30,8 @@ public class UserService {
     private final UserMapper mapper;
 
     private final PasswordEncoder passwordEncoder;
+
+    private final TokenService tokenService;
 
     public UserResponse save(UserRequest request) {
         User user = mapper.toUser(request);
@@ -60,6 +68,13 @@ public class UserService {
         User savedUser = repository.save(user);
 
         return mapper.toUserEnabledResponse(savedUser);
+    }
+
+    public TokenLoginResponse createToken(Principal principal) {
+        User user = repository.findUserByEmail(principal.getName())
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        return tokenService.generateToken(user);
     }
 
 
