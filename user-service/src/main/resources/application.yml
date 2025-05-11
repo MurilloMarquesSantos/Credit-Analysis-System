@@ -18,3 +18,17 @@ spring:
           google:
             client-id: ${GOOGLE_CLIENT}
             client-secret: ${GOOGLE_SECRET}
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: ${RABBIT_USER}
+    password: ${RABBIT_PASSWORD}
+    listener:
+      simple:
+        auto-startup: true
+
+logging:
+  level:
+    org.springframework.amqp: DEBUG
+    org.springframework.messaging: DEBUG
+

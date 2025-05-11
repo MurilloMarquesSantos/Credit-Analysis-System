@@ -67,7 +67,7 @@ public class UserService {
     }
     //todo create the queue that will send the url to notification service containing the url to use either enableUserFromGoogle
     //todo or enableUser
-    //todo to clarify, the request from both methods will be on the response body in the controller that will be created lately
+    //todo to clarify,the request from both methods will be on the response body in the controller that will be created lately
     //todo make the password safer
     public void notifyUser(Jwt token) {
         Long userId = Long.valueOf(token.getSubject());
