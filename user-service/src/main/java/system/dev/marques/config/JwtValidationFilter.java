@@ -26,13 +26,11 @@ public class JwtValidationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-        if (auth instanceof JwtAuthenticationToken jwtAuth) {
-            if (!jwtValidationService.isJwtValid(jwtAuth.getToken())) {
+        if (auth instanceof JwtAuthenticationToken jwtAuth && !jwtValidationService.isJwtValid(jwtAuth.getToken())) {
                 response.setStatus(HttpStatus.FORBIDDEN.value());
                 response.getWriter().write("User is not valid, please check your email box");
                 return;
             }
-        }
 
         filterChain.doFilter(request, response);
 

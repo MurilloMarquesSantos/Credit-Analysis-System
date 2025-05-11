@@ -50,8 +50,8 @@ public class SocialLoginSuccessHandler extends SavedRequestAwareAuthenticationSu
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        response.getWriter().write("{\"token\":\"" + jwt.getToken() + "\"}");
-        response.getWriter().write("{\"expirationTime\":\"" + jwt.getExpiresIn() + "\"}");
+        response.getWriter()
+                .write("{\"token\":\"" + jwt.getToken() + "\", \"expirationTime\":\"" + jwt.getExpiresIn() + "\"}");
         response.getWriter().flush();
     }
 

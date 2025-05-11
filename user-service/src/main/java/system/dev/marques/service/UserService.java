@@ -1,8 +1,10 @@
 package system.dev.marques.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.apache.coyote.BadRequestException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import system.dev.marques.domain.User;
 import system.dev.marques.domain.dto.requests.UserEnableRequest;
@@ -22,6 +24,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Log4j2
 public class UserService {
 
     private final UserRepository repository;
@@ -50,6 +53,10 @@ public class UserService {
         return mapper.toUserResponse(savedUser);
     }
 
+    public User findUserById(Long id) {
+        return repository.findById(id).orElseThrow(() -> new IllegalArgumentException("User not found"));
+    }
+
 
     public UserEnabledResponse enableUserFromGoogle(UserRequestGoogle request, Long id) throws Exception {
         return enableUserInternal(request, id);
@@ -57,6 +64,22 @@ public class UserService {
 
     public UserEnabledResponse enableUser(UserEnableRequest request, Long id) throws Exception {
         return enableUserInternal(request, id);
+    }
+    //todo create the queue that will send the url to notification service containing the url to use either enableUserFromGoogle
+    //todo or enableUser
+    //todo to clarify, the request from both methods will be on the response body in the controller that will be created lately
+    //todo make the password safer
+    public void notifyUser(Jwt token) {
+        Long userId = Long.valueOf(token.getSubject());
+        User user = findUserById(userId);
+        String password = user.getPassword();
+        if (passwordEncoder.matches("123", password)) {
+            log.info("User logged via google");
+            // send email with link to method "enableUserFromGoogle"
+        }else{
+            log.info("User logged via email");
+            //send email with link to method enableUser
+        }
     }
 
     // todo customize Exception, Use encoder in the password, and use Principal instead of Long to get the id
@@ -94,7 +117,6 @@ public class UserService {
     public Optional<User> findByEmail(String email) {
         return repository.findUserByEmail(email);
     }
-
 
 
 }
