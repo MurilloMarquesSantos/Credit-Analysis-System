@@ -7,10 +7,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import system.dev.marques.domain.User;
+import system.dev.marques.domain.dto.ValidUserDto;
 import system.dev.marques.domain.dto.requests.UserEnableRequest;
 import system.dev.marques.domain.dto.requests.UserRequest;
 import system.dev.marques.domain.dto.requests.UserRequestGoogle;
 import system.dev.marques.domain.dto.responses.TokenLoginResponse;
+import system.dev.marques.domain.dto.responses.TokenResponse;
 import system.dev.marques.domain.dto.responses.UserEnabledResponse;
 import system.dev.marques.domain.dto.responses.UserResponse;
 import system.dev.marques.mapper.UserMapper;
@@ -41,6 +43,7 @@ public class UserService {
 
     private final ProducerService producerService;
 
+
     public UserResponse saveUser(UserRequest request) {
         User user = mapper.toUser(request);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -60,37 +63,40 @@ public class UserService {
     }
 
 
-    public UserEnabledResponse enableUserFromGoogle(UserRequestGoogle request, Long id) throws Exception {
-        return enableUserInternal(request, id);
+    public UserEnabledResponse enableUserFromGoogle(String token, UserRequestGoogle request, Principal principal)
+            throws Exception {
+        if (isTokenValid(token, principal)) {
+            return enableUserInternal(request, principal);
+        }
+        throw new BadRequestException("Invalid token");
     }
 
-    public UserEnabledResponse enableUser(UserEnableRequest request, Long id) throws Exception {
-        return enableUserInternal(request, id);
+    public UserEnabledResponse enableUser(String token, UserEnableRequest request, Principal principal)
+            throws Exception {
+        if (isTokenValid(token, principal)) {
+            return enableUserInternal(request, principal);
+        }
+        throw new BadRequestException("Invalid token");
     }
 
-    //todo create the queue that will send the url to notification service containing the url to use either enableUserFromGoogle
-    //todo or enableUser
-    //todo to clarify,the request from both methods will be on the response body in the controller that will be created lately
-    //todo make the password safer
     public void notifyUser(Jwt token) {
         Long userId = Long.valueOf(token.getSubject());
         User user = findUserById(userId);
         String password = user.getPassword();
         if (passwordEncoder.matches("123", password)) {
-            log.info("User logged via google");
-            producerService.enviar(user.getEmail());
-            // send email with link to method "enableUserFromGoogle"
+            producerService.enviar(formatUser(user, "google"));
         } else {
             log.info("User logged via email");
-            producerService.enviar(user.getEmail());
-            //send email with link to method enableUser
+            producerService.enviar(formatUser(user, "formlogin"));
         }
     }
 
-    // todo customize Exception, Use encoder in the password, and use Principal instead of Long to get the id
-    private UserEnabledResponse enableUserInternal(Object request, Long id) throws Exception {
-        User user = repository.findById(id)
-                .orElseThrow(Exception::new);
+    private UserEnabledResponse enableUserInternal(Object request, Principal principal) {
+
+        Long userId = Long.valueOf(principal.getName());
+
+        User user = repository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
         UserEnableStrategy strategy = strategies.stream()
                 .filter(s -> s.supports(request))
@@ -123,5 +129,21 @@ public class UserService {
         return repository.findUserByEmail(email);
     }
 
+    private ValidUserDto formatUser(User user, String source) {
+        ValidUserDto dto = ValidUserDto.builder()
+                .email(user.getEmail())
+                .source(source).build();
+        String token = tokenService.generateEnableUserToken(user);
+        if (source.equals("google")) {
+            dto.setUrl("http://localhost:8080/validate/google?token=" + token);
+        } else {
+            dto.setUrl("http://localhost:8080/validate/form-login?token=" + token);
+        }
+        return dto;
+    }
 
+    private boolean isTokenValid(String token, Principal principal) {
+        Long userId = Long.valueOf(principal.getName());
+        return tokenService.validateToken(token, userId);
+    }
 }
