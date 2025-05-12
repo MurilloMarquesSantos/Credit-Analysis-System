@@ -1,0 +1,13 @@
+server:
+  port: 8084
+spring:
+  application:
+    name: notification-service
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: ${RABBIT_USER}
+    password: ${RABBIT_PASSWORD}
+    listener:
+      simple:
+        auto-startup: true

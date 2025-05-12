@@ -39,6 +39,8 @@ public class UserService {
 
     private final RolesService rolesService;
 
+    private final ProducerService producerService;
+
     public UserResponse saveUser(UserRequest request) {
         User user = mapper.toUser(request);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -65,6 +67,7 @@ public class UserService {
     public UserEnabledResponse enableUser(UserEnableRequest request, Long id) throws Exception {
         return enableUserInternal(request, id);
     }
+
     //todo create the queue that will send the url to notification service containing the url to use either enableUserFromGoogle
     //todo or enableUser
     //todo to clarify,the request from both methods will be on the response body in the controller that will be created lately
@@ -75,9 +78,11 @@ public class UserService {
         String password = user.getPassword();
         if (passwordEncoder.matches("123", password)) {
             log.info("User logged via google");
+            producerService.enviar(user.getEmail());
             // send email with link to method "enableUserFromGoogle"
-        }else{
+        } else {
             log.info("User logged via email");
+            producerService.enviar(user.getEmail());
             //send email with link to method enableUser
         }
     }

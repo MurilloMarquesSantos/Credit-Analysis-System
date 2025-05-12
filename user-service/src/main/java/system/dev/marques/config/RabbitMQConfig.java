@@ -1,31 +1,50 @@
 package system.dev.marques.config;
 
-import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class RabbitMQConfig {
 
-    private String queueName = "test-queue"; // Pode manter como uma variável
-
     @Bean
-    public Queue testQueue() {
-        return new Queue(queueName, true); // Declara a fila "test-queue"
+    public Queue notificationQueue() {
+        return QueueBuilder.durable("notification.user").build();
     }
 
     @Bean
-    public RabbitAdmin rabbitAdmin(ConnectionFactory connectionFactory) {
-        RabbitAdmin rabbitAdmin = new RabbitAdmin(connectionFactory);
-        rabbitAdmin.declareQueue(testQueue()); // Declara a fila explicitamente
-        return rabbitAdmin;
+    public DirectExchange notificationExchange() {
+        return new DirectExchange("notification.exchange");
     }
 
     @Bean
-    public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
-        return new RabbitTemplate(connectionFactory);
+    public Binding bindingNotificacao() {
+        return BindingBuilder
+                .bind(notificationQueue())
+                .to(notificationExchange())
+                .with("notification.user");
+    }
+
+    @Bean
+    public RabbitAdmin rabbitAdmin(ConnectionFactory cf) {
+        return new RabbitAdmin(cf);
+    }
+
+    @Bean
+    public ApplicationListener<ApplicationReadyEvent> init(RabbitAdmin admin) {
+        return event -> admin.initialize();
+    }
+
+    @Bean
+    public RabbitTemplate rabbitTemplate(ConnectionFactory cf) {
+        RabbitTemplate template = new RabbitTemplate(cf);
+        template.setMessageConverter(new Jackson2JsonMessageConverter());
+        return template;
     }
 }
