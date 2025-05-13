@@ -5,6 +5,7 @@ import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
@@ -13,22 +14,46 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMQConfig {
 
+    @Value("${spring.rabbitmq.queue.notification-created}")
+    private String notificationCreateQueue;
+
+    @Value("${spring.rabbitmq.queue.notification-validation}")
+    private String notificationValidationQueue;
+
+    @Value("${spring.rabbitmq.exchange}")
+    private String notificationExchange;
+
+
     @Bean
-    public Queue notificationQueue() {
-        return QueueBuilder.durable("notification.user").build();
+    public Queue userValidationQueue() {
+        return QueueBuilder.durable(notificationValidationQueue).build();
     }
 
     @Bean
-    public DirectExchange notificationExchange() {
-        return new DirectExchange("notification.exchange");
+    public Queue userCreatedQueue() {
+        return QueueBuilder.durable(notificationCreateQueue).build();
     }
 
     @Bean
-    public Binding bindingNotificacao() {
+    public TopicExchange notificationTopicExchange() {
+        return new TopicExchange(notificationExchange);
+    }
+
+
+    @Bean
+    public Binding bindingNotificationValidation() {
         return BindingBuilder
-                .bind(notificationQueue())
-                .to(notificationExchange())
-                .with("notification.user");
+                .bind(userValidationQueue())
+                .to(notificationTopicExchange())
+                .with("notification.user.validation");
+    }
+
+    @Bean
+    public Binding bindingNotificationCreated() {
+        return BindingBuilder
+                .bind(userCreatedQueue())
+                .to(notificationTopicExchange())
+                .with("notification.user.created");
     }
 
     @Bean
@@ -37,7 +62,8 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    public ApplicationListener<ApplicationReadyEvent> init(RabbitAdmin admin) {
+    public ApplicationListener<ApplicationReadyEvent>
+    init(RabbitAdmin admin) {
         return event -> admin.initialize();
     }
 

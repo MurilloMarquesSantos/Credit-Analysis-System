@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
@@ -27,6 +28,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 @Log4j2
 public class SocialLoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
+
     @Value("${google.default.password}")
     private String googlePassword;
 
@@ -35,6 +37,9 @@ public class SocialLoginSuccessHandler extends SavedRequestAwareAuthenticationSu
     private final TokenService tokenService;
 
     private final UserMapper mapper;
+
+
+    //todo customize the exception
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
@@ -45,7 +50,13 @@ public class SocialLoginSuccessHandler extends SavedRequestAwareAuthenticationSu
         String email = oAuth2User.getAttribute("email");
 
         User user = userService.findByEmail(email)
-                .orElseGet(() -> saveUser(email));
+                .orElseGet(() -> {
+                    try {
+                        return saveUser(email);
+                    } catch (BadRequestException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
 
         TokenLoginResponse jwt = tokenService.generateToken(user);
 
@@ -58,7 +69,7 @@ public class SocialLoginSuccessHandler extends SavedRequestAwareAuthenticationSu
         response.getWriter().flush();
     }
 
-    private User saveUser(String email) {
+    private User saveUser(String email) throws BadRequestException {
         UserRequest userRequest = UserRequest.builder()
                 .email(email)
                 .name(getName(email))

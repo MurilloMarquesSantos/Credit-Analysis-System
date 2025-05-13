@@ -3,23 +3,30 @@ package system.dev.marques.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import system.dev.marques.domain.dto.ValidUserDto;
+import system.dev.marques.domain.dto.rabbitmq.CreatedUserDto;
+import system.dev.marques.domain.dto.rabbitmq.ValidUserDto;
 
 @Service
 @RequiredArgsConstructor
 @Log4j2
 public class ProducerService {
 
-    private String notificationExchange = "notification.exchange";
-
-    private String routingKey = "notification.user";
+    @Value("${spring.rabbitmq.exchange}")
+    private String notificationExchange;
 
     private final RabbitTemplate rabbitTemplate;
 
-    public void enviar(ValidUserDto dto){
+    public void sendValidation(ValidUserDto dto){
         log.info("Sending message: {} ", dto.toString());
-        rabbitTemplate.convertAndSend(notificationExchange, routingKey, dto);
+        rabbitTemplate.convertAndSend(notificationExchange, "notification.user.validation", dto);
+        log.info("Message sent: {} ", dto.toString());
+    }
+
+    public void sendCreated(CreatedUserDto dto){
+        log.info("Sending message: {} ", dto.toString());
+        rabbitTemplate.convertAndSend(notificationExchange, "notification.user.created", dto);
         log.info("Message sent: {} ", dto.toString());
     }
 

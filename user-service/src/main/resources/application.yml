@@ -26,6 +26,11 @@ spring:
     listener:
       simple:
         auto-startup: true
+    queue:
+      notification-validation: queue.notification.user.validation
+      notification-created: queue.notification.user.created
+    exchange: notification.exchange
+
 
 google:
   default:

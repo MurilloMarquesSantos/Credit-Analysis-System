@@ -8,7 +8,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import system.dev.marques.domain.User;
-import system.dev.marques.domain.dto.ValidUserDto;
+import system.dev.marques.domain.dto.rabbitmq.CreatedUserDto;
+import system.dev.marques.domain.dto.rabbitmq.ValidUserDto;
 import system.dev.marques.domain.dto.requests.UserEnableRequest;
 import system.dev.marques.domain.dto.requests.UserRequest;
 import system.dev.marques.domain.dto.requests.UserRequestGoogle;
@@ -49,10 +50,11 @@ public class UserService {
     private final ProducerService producerService;
 
 
-    public UserResponse saveUser(UserRequest request) {
+    public UserResponse saveUser(UserRequest request) throws BadRequestException {
         User user = mapper.toUser(request);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        prepareUserDefault(user);
         User savedUser = repository.save(user);
+        sendCreatedMessage(savedUser);
         return mapper.toUserResponse(savedUser);
     }
 
@@ -89,10 +91,9 @@ public class UserService {
         User user = findUserById(userId);
         String password = user.getPassword();
         if (passwordEncoder.matches(googlePassword, password)) {
-            producerService.enviar(formatUser(user, "google"));
+            producerService.sendValidation(formatUser(user, "google"));
         } else {
-            log.info("User logged via email");
-            producerService.enviar(formatUser(user, "formlogin"));
+            producerService.sendValidation(formatUser(user, "formlogin"));
         }
     }
 
@@ -130,6 +131,11 @@ public class UserService {
         user.setValid(true);
     }
 
+    private void prepareUserDefault(User user) throws BadRequestException {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRoles(Collections.singleton(rolesService.getRoleByName("USER")));
+    }
+
     public Optional<User> findByEmail(String email) {
         return repository.findUserByEmail(email);
     }
@@ -150,5 +156,10 @@ public class UserService {
     private boolean isTokenValid(String token, Principal principal) {
         Long userId = Long.valueOf(principal.getName());
         return tokenService.validateToken(token, userId);
+    }
+
+    private void sendCreatedMessage(User user) {
+        CreatedUserDto dto = CreatedUserDto.builder().email(user.getEmail()).name(user.getName()).build();
+        producerService.sendCreated(dto);
     }
 }

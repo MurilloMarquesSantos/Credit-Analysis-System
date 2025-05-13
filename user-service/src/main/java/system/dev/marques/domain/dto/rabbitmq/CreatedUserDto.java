@@ -1,4 +1,4 @@
-package system.dev.marques.domain.dto;
+package system.dev.marques.domain.dto.rabbitmq;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,13 +7,11 @@ import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @Data
-public class ValidUserDto {
+@Builder
+public class CreatedUserDto {
 
     private String email;
 
-    private String url;
-
-    private String source;
+    private String name;
 }
