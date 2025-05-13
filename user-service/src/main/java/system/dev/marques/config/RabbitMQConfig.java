@@ -14,14 +14,20 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMQConfig {
 
+    @Value("${spring.rabbitmq.queue.proposal}")
+    private String proposalQueueName;
+
     @Value("${spring.rabbitmq.queue.notification-created}")
     private String notificationCreateQueue;
 
     @Value("${spring.rabbitmq.queue.notification-validation}")
     private String notificationValidationQueue;
 
-    @Value("${spring.rabbitmq.exchange}")
+    @Value("${spring.rabbitmq.exchange.notification}")
     private String notificationExchange;
+
+    @Value("${spring.rabbitmq.exchange.proposal}")
+    private String proposalExchangeName;
 
 
     @Bean
@@ -35,10 +41,28 @@ public class RabbitMQConfig {
     }
 
     @Bean
+    public Queue proposalQueue() {
+        return QueueBuilder.durable(proposalQueueName).build();
+    }
+
+
+    @Bean
     public TopicExchange notificationTopicExchange() {
         return new TopicExchange(notificationExchange);
     }
 
+    @Bean
+    public DirectExchange proposalExchange() {
+        return new DirectExchange(proposalExchangeName);
+    }
+
+    @Bean
+    public Binding bindingProposal(){
+        return BindingBuilder
+                .bind(proposalQueue())
+                .to(proposalExchange())
+                .with("proposal.queue");
+    }
 
     @Bean
     public Binding bindingNotificationValidation() {

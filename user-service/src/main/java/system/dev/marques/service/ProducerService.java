@@ -5,6 +5,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import system.dev.marques.domain.dto.proposal.ProposalUserInfo;
 import system.dev.marques.domain.dto.rabbitmq.CreatedUserDto;
 import system.dev.marques.domain.dto.rabbitmq.ValidUserDto;
 
@@ -13,8 +14,11 @@ import system.dev.marques.domain.dto.rabbitmq.ValidUserDto;
 @Log4j2
 public class ProducerService {
 
-    @Value("${spring.rabbitmq.exchange}")
+    @Value("${spring.rabbitmq.exchange.notification}")
     private String notificationExchange;
+
+    @Value("${spring.rabbitmq.exchange.proposal}")
+    private String proposalExchange;
 
     private final RabbitTemplate rabbitTemplate;
 
@@ -28,6 +32,10 @@ public class ProducerService {
         log.info("Sending message: {} ", dto.toString());
         rabbitTemplate.convertAndSend(notificationExchange, "notification.user.created", dto);
         log.info("Message sent: {} ", dto.toString());
+    }
+
+    public void sendProposal(ProposalUserInfo userInfo){
+        rabbitTemplate.convertAndSend(proposalExchange, "proposal.queue", userInfo);
     }
 
 }

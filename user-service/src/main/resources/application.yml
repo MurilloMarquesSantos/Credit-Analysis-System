@@ -27,9 +27,13 @@ spring:
       simple:
         auto-startup: true
     queue:
+      proposal: queue.proposal
       notification-validation: queue.notification.user.validation
       notification-created: queue.notification.user.created
-    exchange: notification.exchange
+    exchange:
+      notification: notification.exchange
+      proposal: proposal.exchange
+
 
 
 google:

@@ -17,10 +17,15 @@ public class ProposalService {
 
     private final UserMapper mapper;
 
-    public void proposal(ProposalRequest request, Principal principal) {
+    private final ProducerService producerService;
+
+    public void propose(ProposalRequest request, Principal principal) {
         Long userId = Long.valueOf(principal.getName());
         User user = userService.findUserById(userId);
         ProposalUserInfo proposalUserInfo = mapper.toProposalUserInfo(user, request);
+        producerService.sendProposal(proposalUserInfo);
 
     }
+
+
 }
