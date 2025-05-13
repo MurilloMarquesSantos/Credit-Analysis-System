@@ -24,6 +24,7 @@
     <modules>
         <module>user-service</module>
         <module>notification-service</module>
+        <module>proposal-service</module>
     </modules>
     <scm>
         <connection/>

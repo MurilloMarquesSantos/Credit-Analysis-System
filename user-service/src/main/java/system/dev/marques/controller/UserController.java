@@ -23,7 +23,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/create")
-    public ResponseEntity<UserResponse> create(@RequestBody UserRequest userRequest) {
+    public ResponseEntity<UserResponse> create(@RequestBody UserRequest userRequest) throws BadRequestException {
         return new ResponseEntity<>(userService.saveUser(userRequest), HttpStatus.CREATED);
     }
 
