@@ -46,7 +46,6 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http, JwtValidationFilter jwtValidationFilter,
                                            SocialLoginSuccessHandler successHandler) throws Exception {
         http.authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/validate/google").permitAll()
                         .anyRequest().authenticated())
                 .formLogin(form -> form.loginPage("/login").permitAll())
                 .csrf(AbstractHttpConfigurer::disable)

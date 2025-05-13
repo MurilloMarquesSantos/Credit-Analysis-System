@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -26,6 +27,8 @@ import java.util.Set;
 @RequiredArgsConstructor
 @Log4j2
 public class SocialLoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
+    @Value("${google.default.password}")
+    private String googlePassword;
 
     private final UserService userService;
 
@@ -59,7 +62,7 @@ public class SocialLoginSuccessHandler extends SavedRequestAwareAuthenticationSu
         UserRequest userRequest = UserRequest.builder()
                 .email(email)
                 .name(getName(email))
-                .password("123")
+                .password(googlePassword)
                 .build();
         UserResponse userResponse = userService.saveUser(userRequest);
 

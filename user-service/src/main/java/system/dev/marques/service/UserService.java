@@ -3,6 +3,7 @@ package system.dev.marques.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.coyote.BadRequestException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
@@ -12,7 +13,6 @@ import system.dev.marques.domain.dto.requests.UserEnableRequest;
 import system.dev.marques.domain.dto.requests.UserRequest;
 import system.dev.marques.domain.dto.requests.UserRequestGoogle;
 import system.dev.marques.domain.dto.responses.TokenLoginResponse;
-import system.dev.marques.domain.dto.responses.TokenResponse;
 import system.dev.marques.domain.dto.responses.UserEnabledResponse;
 import system.dev.marques.domain.dto.responses.UserResponse;
 import system.dev.marques.mapper.UserMapper;
@@ -24,10 +24,15 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+//TODO customize all exceptions
+
 @Service
 @RequiredArgsConstructor
 @Log4j2
 public class UserService {
+
+    @Value("${google.default.password}")
+    private String googlePassword;
 
     private final UserRepository repository;
 
@@ -83,7 +88,7 @@ public class UserService {
         Long userId = Long.valueOf(token.getSubject());
         User user = findUserById(userId);
         String password = user.getPassword();
-        if (passwordEncoder.matches("123", password)) {
+        if (passwordEncoder.matches(googlePassword, password)) {
             producerService.enviar(formatUser(user, "google"));
         } else {
             log.info("User logged via email");

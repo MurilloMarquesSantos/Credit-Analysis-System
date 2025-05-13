@@ -21,24 +21,23 @@ public class JwtValidationFilter extends OncePerRequestFilter {
 
     private final JwtValidationService jwtValidationService;
 
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         String path = request.getServletPath();
 
-        if (path.equals("/validate/google")) {
-            filterChain.doFilter(request, response);
-            return;
-        }
+        boolean isExcluded = path.equals("/validate/google") || path.equals("/validate/form-login");
 
-        if (auth instanceof JwtAuthenticationToken jwtAuth && !jwtValidationService.isJwtValid(jwtAuth.getToken())) {
-            response.setStatus(HttpStatus.FORBIDDEN.value());
-            response.getWriter().write("User is not valid, please check your email box");
-            return;
+        if (!isExcluded) {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            if (auth instanceof JwtAuthenticationToken jwtAuth && !jwtValidationService.isJwtValid(jwtAuth.getToken())) {
+                response.setStatus(HttpStatus.FORBIDDEN.value());
+                response.getWriter().write("User is not valid, please check your email box");
+                return;
+            }
         }
-
         filterChain.doFilter(request, response);
 
     }

@@ -26,8 +26,7 @@ spring:
     listener:
       simple:
         auto-startup: true
-logging:
-  level:
-    org.springframework.amqp: DEBUG
-    org.springframework.messaging: DEBUG
 
+google:
+  default:
+    password: ${GOOGLE_DEFAULT_PASSWORD}

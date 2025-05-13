@@ -67,8 +67,12 @@ public class TokenService {
 
     public boolean validateToken(String token, Long userId) {
         Optional<EnableUserToken> tokenOpt = tokenRepository.findByToken(token);
-        return tokenOpt.isPresent() && tokenOpt.get().getUserId().equals(userId)
-                && tokenOpt.get().getExpirationDate().isAfter(LocalDateTime.now());
+        if (tokenOpt.isPresent() && tokenOpt.get().getUserId().equals(userId)
+                && tokenOpt.get().getExpirationDate().isAfter(LocalDateTime.now())) {
+            tokenRepository.deleteById(tokenOpt.get().getId());
+            return true;
+        }
+        return false;
     }
 }
 
