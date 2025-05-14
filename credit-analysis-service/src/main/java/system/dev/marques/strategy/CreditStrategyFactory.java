@@ -13,6 +13,6 @@ public class CreditStrategyFactory {
         return strategies.stream()
                 .filter(strategy -> strategy.supports(score))
                 .findFirst()
-                .orElseThrow(() -> new IllegalStateException("Nenhuma estratégia encontrada para score: " + score));
+                .orElseThrow(() -> new IllegalStateException("None strategy found for score: " + score));
     }
 }

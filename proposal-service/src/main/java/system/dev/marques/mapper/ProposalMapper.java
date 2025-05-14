@@ -12,5 +12,6 @@ public interface ProposalMapper {
     Proposal toProposal(ProposalDto proposalDto);
 
     @Mapping(target = "proposalId", source = "proposal.id")
+    @Mapping(target = "installments", source = "proposal.installments")
     ProposalCreditDto toProposalCreditDto(Proposal proposal);
 }

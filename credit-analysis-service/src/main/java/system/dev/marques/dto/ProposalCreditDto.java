@@ -19,4 +19,6 @@ public class ProposalCreditDto {
 
     private Double requestedAmount;
 
+    private int installments;
+
 }

@@ -13,12 +13,14 @@ public class LowScoreStrategy implements CreditAnalysisStrategy {
     }
 
     @Override
-    public AnalyzedDto analyse(Long proposalId, Double income, Double requestedAmount, int score, String cpf) {
+    public AnalyzedDto analyse(Long proposalId, Double income, Double requestedAmount, int score,
+                               String cpf, int installments) {
         return AnalyzedDto.builder()
                 .proposalId(proposalId)
                 .cpf(cpf)
                 .status(ProposalStatus.REJECTED)
-                .rejectedReason("Your score is to low do submit a proposal: " + score)
+                .rejectedReason("Your score is too low to submit the proposal. Score: " + score)
                 .build();
     }
+
 }

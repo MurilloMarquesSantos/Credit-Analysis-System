@@ -35,6 +35,7 @@ public class ProposalListener {
 
     @RabbitListener(queues = "queue.analyzed.credit")
     public void listerAnalyzedProposalQueue(AnalyzedDto dto) {
+        proposalService.updateProposalStatus(dto);
         log.info("analyzed proposal: {}", dto);
     }
 

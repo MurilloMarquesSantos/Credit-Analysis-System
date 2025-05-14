@@ -25,7 +25,8 @@ public class CreditAnalysisService {
 
         CreditAnalysisStrategy strategy = strategyFactory.getStrategy(score);
 
-        return strategy.analyse(dto.getProposalId(), dto.getUserIncome(), dto.getRequestedAmount(), score, dto.getCpf());
+        return strategy.analyse(dto.getProposalId(), dto.getUserIncome(), dto.getRequestedAmount(), score, dto.getCpf(),
+                dto.getInstallments());
 
     }
 }
