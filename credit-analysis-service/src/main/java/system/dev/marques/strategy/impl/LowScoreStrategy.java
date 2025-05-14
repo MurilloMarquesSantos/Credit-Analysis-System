@@ -1,6 +1,8 @@
 package system.dev.marques.strategy.impl;
 
 import org.springframework.stereotype.Component;
+import system.dev.marques.dto.AnalyzedDto;
+import system.dev.marques.enums.ProposalStatus;
 import system.dev.marques.strategy.CreditAnalysisStrategy;
 
 @Component
@@ -11,7 +13,12 @@ public class LowScoreStrategy implements CreditAnalysisStrategy {
     }
 
     @Override
-    public String analyse(Double income, Double requestedAmount, int score) {
-        return "Score too low!";
+    public AnalyzedDto analyse(Long proposalId, Double income, Double requestedAmount, int score, String cpf) {
+        return AnalyzedDto.builder()
+                .proposalId(proposalId)
+                .cpf(cpf)
+                .status(ProposalStatus.REJECTED)
+                .rejectedReason("Your score is to low do submit a proposal: " + score)
+                .build();
     }
 }

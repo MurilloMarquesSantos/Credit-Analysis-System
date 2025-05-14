@@ -14,17 +14,35 @@ public class RabbitMQConfig {
     private String creditQueueName;
 
 
+    @Value("${spring.rabbitmq.queue.credit.analyzed-credit}")
+    private String analyzedCreditQueueName;
+
     @Value("${spring.rabbitmq.exchange.credit}")
     private String crediteExchangeName;
+
+    @Value("${spring.rabbitmq.exchange.analyzed-credit}")
+    private String analyzedCreditExchangeName;
 
     @Bean
     public Queue creditQueue() {
         return QueueBuilder.durable(creditQueueName).build();
     }
 
+
+    @Bean
+    public Queue analyzedCreditQueue() {
+        return QueueBuilder.durable(analyzedCreditQueueName).build();
+    }
+
     @Bean
     public DirectExchange creditExchange() {
         return new DirectExchange(crediteExchangeName);
+    }
+
+
+    @Bean
+    public DirectExchange analyzedCreditExchange() {
+        return new DirectExchange(analyzedCreditExchangeName);
     }
 
     @Bean
@@ -33,6 +51,14 @@ public class RabbitMQConfig {
                 .bind(creditQueue())
                 .to(creditExchange())
                 .with("credit.queue");
+    }
+
+    @Bean
+    public Binding bindingAnalyzedCredit() {
+        return BindingBuilder
+                .bind(analyzedCreditQueue())
+                .to(analyzedCreditExchange())
+                .with("analyzed-credit.queue");
     }
 
 

@@ -11,3 +11,5 @@ spring:
     listener:
       simple:
         auto-startup: true
+    exchange:
+      analyzed-credit: analyzed.exchange

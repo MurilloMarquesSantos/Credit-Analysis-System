@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 @Builder
 public class ProposalCreditDto {
 
+    private Long proposalId;
+
     private String cpf;
 
     private Double userIncome;
