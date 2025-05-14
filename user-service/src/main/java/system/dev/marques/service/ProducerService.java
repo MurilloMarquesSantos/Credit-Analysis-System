@@ -23,15 +23,11 @@ public class ProducerService {
     private final RabbitTemplate rabbitTemplate;
 
     public void sendValidation(ValidUserDto dto){
-        log.info("Sending message: {} ", dto.toString());
         rabbitTemplate.convertAndSend(notificationExchange, "notification.user.validation", dto);
-        log.info("Message sent: {} ", dto.toString());
     }
 
     public void sendCreated(CreatedUserDto dto){
-        log.info("Sending message: {} ", dto.toString());
         rabbitTemplate.convertAndSend(notificationExchange, "notification.user.created", dto);
-        log.info("Message sent: {} ", dto.toString());
     }
 
     public void sendProposal(ProposalUserInfo userInfo){

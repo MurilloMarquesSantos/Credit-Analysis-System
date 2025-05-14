@@ -8,7 +8,7 @@ import system.dev.marques.dto.ValidUserDto;
 
 @Service
 @Log4j2
-public class RabbitMQListener {
+public class NotificationListener {
 
     @RabbitListener(queues = "queue.notification.user.validation")
     public void listenValidationQueue(ValidUserDto dto) {

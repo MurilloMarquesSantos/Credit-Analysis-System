@@ -25,6 +25,7 @@
         <module>user-service</module>
         <module>notification-service</module>
         <module>proposal-service</module>
+        <module>credit-analysis-service</module>
     </modules>
     <scm>
         <connection/>

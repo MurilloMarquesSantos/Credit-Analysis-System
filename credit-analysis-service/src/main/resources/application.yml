@@ -1,0 +1,13 @@
+server:
+  port: 8082
+spring:
+  application:
+    name: credit-analysis-application
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: ${RABBIT_USER}
+    password: ${RABBIT_PASSWORD}
+    listener:
+      simple:
+        auto-startup: true
