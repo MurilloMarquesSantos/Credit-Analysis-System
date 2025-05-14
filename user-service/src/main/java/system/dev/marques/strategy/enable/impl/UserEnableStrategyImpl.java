@@ -1,11 +1,11 @@
-package system.dev.marques.strategy.user.enable.impl;
+package system.dev.marques.strategy.enable.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import system.dev.marques.domain.User;
 import system.dev.marques.domain.dto.requests.UserEnableRequest;
 import system.dev.marques.mapper.UserMapper;
-import system.dev.marques.strategy.user.enable.UserEnableStrategy;
+import system.dev.marques.strategy.enable.UserEnableStrategy;
 
 @Component
 @RequiredArgsConstructor

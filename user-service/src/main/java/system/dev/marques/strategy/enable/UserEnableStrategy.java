@@ -1,4 +1,4 @@
-package system.dev.marques.strategy.user.enable;
+package system.dev.marques.strategy.enable;
 
 
 import system.dev.marques.domain.User;

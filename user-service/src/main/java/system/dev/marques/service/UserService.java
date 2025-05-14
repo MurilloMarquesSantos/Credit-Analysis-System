@@ -18,11 +18,11 @@ import system.dev.marques.domain.dto.responses.UserEnabledResponse;
 import system.dev.marques.domain.dto.responses.UserResponse;
 import system.dev.marques.mapper.UserMapper;
 import system.dev.marques.repository.UserRepository;
-import system.dev.marques.strategy.user.enable.UserEnableStrategy;
+import system.dev.marques.strategy.enable.UserEnableStrategy;
+import system.dev.marques.strategy.enable.UserEnabledStrategyFactory;
 
 import java.security.Principal;
 import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 
 //TODO customize all exceptions
@@ -37,7 +37,7 @@ public class UserService {
 
     private final UserRepository repository;
 
-    private final List<UserEnableStrategy> strategies;
+    private final UserEnabledStrategyFactory strategyFactory;
 
     private final UserMapper mapper;
 
@@ -104,10 +104,7 @@ public class UserService {
         User user = repository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-        UserEnableStrategy strategy = strategies.stream()
-                .filter(s -> s.supports(request))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("No strategy found for request: " + request));
+        UserEnableStrategy strategy = strategyFactory.getStrategy(request);
 
         strategy.updateUser(request, user);
 
