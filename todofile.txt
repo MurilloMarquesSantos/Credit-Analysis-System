@@ -10,6 +10,8 @@ Endpoints REST de entrada (propostas, histórico, etc.)
 Comunicação com os outros serviços (REST + RabbitMQ)
 
 2. Proposal-Service (8082)
+
+usar registered clients
 🔹 Responsável por:
 
 Receber proposta (REST ou via fila)

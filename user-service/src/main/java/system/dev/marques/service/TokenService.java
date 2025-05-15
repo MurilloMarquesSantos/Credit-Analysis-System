@@ -30,7 +30,7 @@ public class TokenService {
     public TokenLoginResponse generateToken(User user) {
 
         Instant now = Instant.now();
-        long expiresIn = 300L;
+        long expiresIn = 600L;
 
 
         String scope = user.getRoles()

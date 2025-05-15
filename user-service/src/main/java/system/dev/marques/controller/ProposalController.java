@@ -20,6 +20,6 @@ public class ProposalController {
     @PostMapping("/send-proposal")
     public String proposal(@RequestBody ProposalRequest request, Principal principal) {
         proposalService.propose(request, principal);
-        return "success";
+        return "Proposal sent for review. Please monitor your email inbox for further updates.";
     }
 }

@@ -20,6 +20,7 @@ import system.dev.marques.mapper.UserMapper;
 import system.dev.marques.repository.UserRepository;
 import system.dev.marques.strategy.enable.UserEnableStrategy;
 import system.dev.marques.strategy.enable.UserEnabledStrategyFactory;
+import system.dev.marques.strategy.verification.UserValidationStrategyFactory;
 
 import java.security.Principal;
 import java.util.Collections;
@@ -37,7 +38,9 @@ public class UserService {
 
     private final UserRepository repository;
 
-    private final UserEnabledStrategyFactory strategyFactory;
+    private final UserEnabledStrategyFactory enableStrategyFactory;
+
+    private final UserValidationStrategyFactory validationStrategyFactory;
 
     private final UserMapper mapper;
 
@@ -51,6 +54,7 @@ public class UserService {
 
 
     public UserResponse saveUser(UserRequest request) throws BadRequestException {
+        validateRequest(request);
         User user = mapper.toUser(request);
         prepareUserDefault(user);
         User savedUser = repository.save(user);
@@ -59,6 +63,7 @@ public class UserService {
     }
 
     public UserResponse saveAdmin(UserRequest request) throws BadRequestException {
+        validateRequest(request);
         User user = mapper.toUser(request);
         prepareUserAdmin(user);
         User savedUser = repository.save(user);
@@ -104,7 +109,7 @@ public class UserService {
         User user = repository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
-        UserEnableStrategy strategy = strategyFactory.getStrategy(request);
+        UserEnableStrategy strategy = enableStrategyFactory.getStrategy(request);
 
         strategy.updateUser(request, user);
 
@@ -158,5 +163,9 @@ public class UserService {
     private void sendCreatedMessage(User user) {
         CreatedUserDto dto = CreatedUserDto.builder().email(user.getEmail()).name(user.getName()).build();
         producerService.sendCreated(dto);
+    }
+
+    private void validateRequest(UserRequest request) throws BadRequestException {
+        validationStrategyFactory.validate(request);
     }
 }
