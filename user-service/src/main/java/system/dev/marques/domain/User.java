@@ -26,8 +26,10 @@ public class User implements UserDetails {
 
     private String email;
     @CPF
+    @Column(unique = true)
     private String cpf;
 
+    @Column(unique = true)
     private String phoneNumber;
 
     private Double income;

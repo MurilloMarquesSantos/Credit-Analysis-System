@@ -21,7 +21,7 @@ public class CreditAnalysisService {
 
     public AnalyzedDto analyzeCredit(ProposalCreditDto dto) {
 
-        int score = random.nextInt(1001);
+        int score = random.nextInt(350, 1001);
 
         CreditAnalysisStrategy strategy = strategyFactory.getStrategy(score);
 
