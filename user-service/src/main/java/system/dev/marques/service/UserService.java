@@ -53,12 +53,12 @@ public class UserService {
     private final ProducerService producerService;
 
 
-    public UserResponse saveUser(UserRequest request) throws BadRequestException {
+    public UserResponse saveUser(UserRequest request, String source) throws BadRequestException {
         validateRequest(request);
         User user = mapper.toUser(request);
         prepareUserDefault(user);
         User savedUser = repository.save(user);
-        sendCreatedMessage(savedUser);
+        sendCreatedMessage(savedUser, source);
         return mapper.toUserResponse(savedUser);
     }
 
@@ -147,21 +147,36 @@ public class UserService {
                 .email(user.getEmail())
                 .source(source).build();
         String token = tokenService.generateEnableUserToken(user);
+        setUrl(source, dto, token);
+        return dto;
+    }
+
+    private static void setUrl(String source, ValidUserDto dto, String token) {
         if (source.equals("google")) {
             dto.setUrl("http://localhost:8080/validate/google?token=" + token);
         } else {
             dto.setUrl("http://localhost:8080/validate/form-login?token=" + token);
         }
-        return dto;
     }
+
+    private static void setUrl(String source, CreatedUserDto dto, String token) {
+        if (source.equals("google")) {
+            dto.setUrl("http://localhost:8080/validate/google?token=" + token);
+        } else {
+            dto.setUrl("http://localhost:8080/validate/form-login?token=" + token);
+        }
+    }
+
 
     private boolean isTokenValid(String token, Principal principal) {
         Long userId = Long.valueOf(principal.getName());
         return tokenService.validateToken(token, userId);
     }
 
-    private void sendCreatedMessage(User user) {
+    private void sendCreatedMessage(User user, String source) {
         CreatedUserDto dto = CreatedUserDto.builder().email(user.getEmail()).name(user.getName()).build();
+        String token = tokenService.generateEnableUserToken(user);
+        setUrl(source, dto, token);
         producerService.sendCreated(dto);
     }
 

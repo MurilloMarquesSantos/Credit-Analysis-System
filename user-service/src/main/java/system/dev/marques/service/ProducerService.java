@@ -27,6 +27,7 @@ public class ProducerService {
     }
 
     public void sendCreated(CreatedUserDto dto){
+        log.info(dto.toString());
         rabbitTemplate.convertAndSend(notificationExchange, "notification.user.created", dto);
     }
 

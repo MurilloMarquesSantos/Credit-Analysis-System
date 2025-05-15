@@ -25,7 +25,7 @@ public class UserController {
 
     @PostMapping("/create")
     public ResponseEntity<UserResponse> create(@RequestBody UserRequest userRequest) throws BadRequestException {
-        return new ResponseEntity<>(userService.saveUser(userRequest), HttpStatus.CREATED);
+        return new ResponseEntity<>(userService.saveUser(userRequest, "formlogin"), HttpStatus.CREATED);
     }
 
     @PostMapping("/create-admin")

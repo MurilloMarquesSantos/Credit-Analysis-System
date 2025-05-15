@@ -40,6 +40,7 @@ public class SocialLoginSuccessHandler extends SavedRequestAwareAuthenticationSu
 
 
     //todo customize the exception
+    // melhorar os metodos
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
@@ -75,7 +76,7 @@ public class SocialLoginSuccessHandler extends SavedRequestAwareAuthenticationSu
                 .name(getName(email))
                 .password(googlePassword)
                 .build();
-        UserResponse userResponse = userService.saveUser(userRequest);
+        UserResponse userResponse = userService.saveUser(userRequest, "google");
 
         User user = mapper.toUser(userResponse);
         user.setRoles(Set.of(new Roles(2L, "USER")));

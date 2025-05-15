@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import system.dev.marques.domain.Proposal;
 import system.dev.marques.domain.dto.AnalyzedDto;
 import system.dev.marques.domain.dto.ProposalDto;
+import system.dev.marques.domain.dto.ProposalStatusEmailDto;
 import system.dev.marques.domain.dto.reponse.ProposalHistoryResponse;
 import system.dev.marques.domain.enums.ProposalStatus;
 import system.dev.marques.mapper.ProposalMapper;
@@ -19,6 +20,8 @@ public class ProposalService {
 
     private final ProposalRepository proposalRepository;
 
+    private final ProducerService producerService;
+
     private final ProposalMapper mapper;
 
     public Proposal save(ProposalDto dto) {
@@ -31,7 +34,10 @@ public class ProposalService {
         Optional<Proposal> proposalOpt = proposalRepository.findById(dto.getProposalId());
         if (proposalOpt.isPresent()) {
             proposalOpt.get().setStatus(dto.getStatus());
-            proposalRepository.save(proposalOpt.get());
+            Proposal savedProposal = proposalRepository.save(proposalOpt.get());
+            ProposalStatusEmailDto emailDto = mapper.toProposalStatusEmailDto(savedProposal);
+            emailDto.setRejectedReason(dto.getRejectedReason());
+            producerService.sendProposalStatus(emailDto);
         }
     }
 

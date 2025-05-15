@@ -1,3 +1,7 @@
+CREATE GLOBAL EXCEPTION HANDLERS AND CUSTOMIZE THEM ALL
+
+
+
 1. Auth/User-Service (porta 8081)
 🔹 Responsável por:
 

@@ -5,6 +5,7 @@ import org.mapstruct.Mapping;
 import system.dev.marques.domain.Proposal;
 import system.dev.marques.domain.dto.ProposalCreditDto;
 import system.dev.marques.domain.dto.ProposalDto;
+import system.dev.marques.domain.dto.ProposalStatusEmailDto;
 import system.dev.marques.domain.dto.reponse.ProposalHistoryResponse;
 
 @Mapper(componentModel = "spring")
@@ -17,4 +18,6 @@ public interface ProposalMapper {
     ProposalCreditDto toProposalCreditDto(Proposal proposal);
 
     ProposalHistoryResponse toProposalHistoryResponse(Proposal proposal);
+
+    ProposalStatusEmailDto toProposalStatusEmailDto(Proposal proposal);
 }

@@ -22,6 +22,9 @@ spring:
       credit:
         analysis: queue.credit.analysis
         analyzed-credit: queue.analyzed.credit
+      notification:
+        proposal-status: queue.proposal.status
     exchange:
       credit: credit.exchange
       analyzed-credit: analyzed.exchange
+      proposal-notification: status.exchange
