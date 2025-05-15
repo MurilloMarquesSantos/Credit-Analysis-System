@@ -5,10 +5,12 @@ import org.springframework.stereotype.Service;
 import system.dev.marques.domain.Proposal;
 import system.dev.marques.domain.dto.AnalyzedDto;
 import system.dev.marques.domain.dto.ProposalDto;
+import system.dev.marques.domain.dto.reponse.ProposalHistoryResponse;
 import system.dev.marques.domain.enums.ProposalStatus;
 import system.dev.marques.mapper.ProposalMapper;
 import system.dev.marques.repository.ProposalRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -31,5 +33,12 @@ public class ProposalService {
             proposalOpt.get().setStatus(dto.getStatus());
             proposalRepository.save(proposalOpt.get());
         }
+    }
+
+    public List<ProposalHistoryResponse> getProposalHistory(Long userId) {
+        List<Proposal> userHistory = proposalRepository.findByUserId(userId);
+        return userHistory.stream()
+                .map(mapper::toProposalHistoryResponse)
+                .toList();
     }
 }

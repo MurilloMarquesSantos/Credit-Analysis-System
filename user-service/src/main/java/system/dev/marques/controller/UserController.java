@@ -4,19 +4,22 @@ import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.reactive.function.client.WebClient;
 import system.dev.marques.domain.dto.requests.UserRequest;
+import system.dev.marques.domain.dto.responses.ProposalHistoryResponse;
 import system.dev.marques.domain.dto.responses.UserResponse;
 import system.dev.marques.service.UserService;
+
+import java.security.Principal;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/home")
 public class UserController {
 
+    private final WebClient webClient;
 
     private final UserService userService;
 
@@ -28,6 +31,21 @@ public class UserController {
     @PostMapping("/create-admin")
     public ResponseEntity<UserResponse> createAdmin(@RequestBody UserRequest userRequest) throws BadRequestException {
         return new ResponseEntity<>(userService.saveAdmin(userRequest), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/user/history")
+    public ResponseEntity<List<ProposalHistoryResponse>> getUserHistory(Principal principal) {
+        Long userId = Long.valueOf(principal.getName());
+
+        List<ProposalHistoryResponse> history = webClient.get()
+                .uri("/service/history/{id}", userId)
+                .retrieve()
+                .bodyToFlux(ProposalHistoryResponse.class)
+                .collectList()
+                .block();
+
+        return ResponseEntity.ok(history);
+
     }
 
 }

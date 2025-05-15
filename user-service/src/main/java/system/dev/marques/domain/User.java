@@ -8,6 +8,7 @@ import org.hibernate.validator.constraints.br.CPF;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Set;
 
@@ -40,6 +41,8 @@ public class User implements UserDetails {
     private Set<Roles> roles;
 
     private boolean valid;
+
+    private LocalDateTime lastProposalAt;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
