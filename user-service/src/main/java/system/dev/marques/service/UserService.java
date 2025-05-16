@@ -16,6 +16,7 @@ import system.dev.marques.domain.dto.requests.UserRequestGoogle;
 import system.dev.marques.domain.dto.responses.TokenLoginResponse;
 import system.dev.marques.domain.dto.responses.UserEnabledResponse;
 import system.dev.marques.domain.dto.responses.UserResponse;
+import system.dev.marques.exception.InvalidTokenException;
 import system.dev.marques.mapper.UserMapper;
 import system.dev.marques.repository.UserRepository;
 import system.dev.marques.strategy.enable.UserEnableStrategy;
@@ -25,8 +26,6 @@ import system.dev.marques.strategy.verification.UserValidationStrategyFactory;
 import java.security.Principal;
 import java.util.Collections;
 import java.util.Optional;
-
-//TODO customize all exceptions
 
 @Service
 @RequiredArgsConstructor
@@ -52,9 +51,13 @@ public class UserService {
 
     private final ProducerService producerService;
 
+    private static final String GOOGLE_SOURCE = "google";
+
 
     public UserResponse saveUser(UserRequest request, String source) throws BadRequestException {
-        validateRequest(request);
+        if (!source.equals(GOOGLE_SOURCE)){
+            validateRequest(request);
+        }
         User user = mapper.toUser(request);
         prepareUserDefault(user);
         User savedUser = repository.save(user);
@@ -75,20 +78,18 @@ public class UserService {
     }
 
 
-    public UserEnabledResponse enableUserFromGoogle(String token, UserRequestGoogle request, Principal principal)
-            throws Exception {
+    public UserEnabledResponse enableUserFromGoogle(String token, UserRequestGoogle request, Principal principal) {
         if (isTokenValid(token, principal)) {
             return enableUserInternal(request, principal);
         }
-        throw new BadRequestException("Invalid token");
+        throw new InvalidTokenException("This link is expired!");
     }
 
-    public UserEnabledResponse enableUser(String token, UserEnableRequest request, Principal principal)
-            throws Exception {
+    public UserEnabledResponse enableUser(String token, UserEnableRequest request, Principal principal) {
         if (isTokenValid(token, principal)) {
             return enableUserInternal(request, principal);
         }
-        throw new BadRequestException("Invalid token");
+        throw new InvalidTokenException("This link is expired!");
     }
 
     public void notifyUser(Jwt token) {
@@ -96,7 +97,7 @@ public class UserService {
         User user = findUserById(userId);
         String password = user.getPassword();
         if (passwordEncoder.matches(googlePassword, password)) {
-            producerService.sendValidation(formatUser(user, "google"));
+            producerService.sendValidation(formatUser(user, GOOGLE_SOURCE));
         } else {
             producerService.sendValidation(formatUser(user, "formlogin"));
         }
@@ -106,8 +107,7 @@ public class UserService {
 
         Long userId = Long.valueOf(principal.getName());
 
-        User user = repository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        User user = findUserById(userId);
 
         UserEnableStrategy strategy = enableStrategyFactory.getStrategy(request);
 
@@ -121,8 +121,7 @@ public class UserService {
     }
 
     public TokenLoginResponse createToken(Principal principal) {
-        User user = repository.findUserByEmail(principal.getName())
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        User user = findUserByEmailOrThrowIllegalArgumentException(principal.getName());
 
         return tokenService.generateToken(user);
     }
@@ -142,6 +141,10 @@ public class UserService {
         return repository.findUserByEmail(email);
     }
 
+    public User findUserByEmailOrThrowIllegalArgumentException(String email) {
+        return repository.findUserByEmail(email).orElseThrow(() -> new IllegalArgumentException("User not found"));
+    }
+
     private ValidUserDto formatUser(User user, String source) {
         ValidUserDto dto = ValidUserDto.builder()
                 .email(user.getEmail())
@@ -152,7 +155,7 @@ public class UserService {
     }
 
     private static void setUrl(String source, ValidUserDto dto, String token) {
-        if (source.equals("google")) {
+        if (source.equals(GOOGLE_SOURCE)) {
             dto.setUrl("http://localhost:8080/validate/google?token=" + token);
         } else {
             dto.setUrl("http://localhost:8080/validate/form-login?token=" + token);
@@ -160,7 +163,7 @@ public class UserService {
     }
 
     private static void setUrl(String source, CreatedUserDto dto, String token) {
-        if (source.equals("google")) {
+        if (source.equals(GOOGLE_SOURCE)) {
             dto.setUrl("http://localhost:8080/validate/google?token=" + token);
         } else {
             dto.setUrl("http://localhost:8080/validate/form-login?token=" + token);

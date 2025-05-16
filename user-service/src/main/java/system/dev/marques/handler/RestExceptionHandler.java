@@ -4,7 +4,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.lang.Nullable;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -12,6 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import system.dev.marques.exception.ExceptionDetails;
+import system.dev.marques.exception.InvalidTokenException;
 import system.dev.marques.exception.ValidationExceptionDetails;
 
 import java.time.LocalDateTime;
@@ -19,10 +19,25 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
+//todo create a handler for DataIntegrityException
+
 @RestControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd - HH:mm:ss");
+
+    @ExceptionHandler(InvalidTokenException.class)
+    public ResponseEntity<ExceptionDetails> handleInvalidTokenEx(InvalidTokenException ex, WebRequest request) {
+        return new ResponseEntity<>(ExceptionDetails.builder()
+                .timestamp(LocalDateTime.now().format(dateTimeFormatter))
+                .status(HttpStatus.UNAUTHORIZED)
+                .details(ex.getMessage())
+                .developerMessage(ex.getClass().getName())
+                .path(request.getDescription(false))
+                .build(), HttpStatus.UNAUTHORIZED
+        );
+    }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ExceptionDetails> handleGlobalException(Exception ex, WebRequest request) {

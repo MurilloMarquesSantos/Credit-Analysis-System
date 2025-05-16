@@ -6,8 +6,6 @@ import org.springframework.stereotype.Service;
 import system.dev.marques.domain.Roles;
 import system.dev.marques.repository.RolesRepository;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 public class RolesService {

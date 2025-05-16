@@ -38,10 +38,6 @@ public class SocialLoginSuccessHandler extends SavedRequestAwareAuthenticationSu
 
     private final UserMapper mapper;
 
-
-    //todo customize the exception
-    // melhorar os metodos
-
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws ServletException, IOException {
@@ -55,7 +51,7 @@ public class SocialLoginSuccessHandler extends SavedRequestAwareAuthenticationSu
                     try {
                         return saveUser(email);
                     } catch (BadRequestException e) {
-                        throw new RuntimeException(e);
+                        throw new IllegalArgumentException("Error while saving the user", e);
                     }
                 });
 
