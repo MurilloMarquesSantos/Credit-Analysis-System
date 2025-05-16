@@ -1,5 +1,6 @@
 package system.dev.marques.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
@@ -24,12 +25,12 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/create")
-    public ResponseEntity<UserResponse> create(@RequestBody UserRequest userRequest) throws BadRequestException {
+    public ResponseEntity<UserResponse> create(@RequestBody @Valid UserRequest userRequest) throws BadRequestException {
         return new ResponseEntity<>(userService.saveUser(userRequest, "formlogin"), HttpStatus.CREATED);
     }
 
     @PostMapping("/create-admin")
-    public ResponseEntity<UserResponse> createAdmin(@RequestBody UserRequest userRequest) throws BadRequestException {
+    public ResponseEntity<UserResponse> createAdmin(@RequestBody @Valid UserRequest userRequest) throws BadRequestException {
         return new ResponseEntity<>(userService.saveAdmin(userRequest), HttpStatus.CREATED);
     }
 

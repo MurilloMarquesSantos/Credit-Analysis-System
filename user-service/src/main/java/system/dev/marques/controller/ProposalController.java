@@ -1,5 +1,6 @@
 package system.dev.marques.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +20,7 @@ public class ProposalController {
     private final ProposalService proposalService;
 
     @PostMapping("/send-proposal")
-    public String proposal(@RequestBody ProposalRequest request, Principal principal) throws BadRequestException {
+    public String proposal(@RequestBody @Valid ProposalRequest request, Principal principal) throws BadRequestException {
         proposalService.propose(request, principal);
         return "Proposal sent for review. Please monitor your email inbox for further updates.";
     }
