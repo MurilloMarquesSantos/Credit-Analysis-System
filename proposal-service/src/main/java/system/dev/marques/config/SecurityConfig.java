@@ -2,8 +2,10 @@ package system.dev.marques.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
@@ -11,7 +13,6 @@ import org.springframework.security.oauth2.server.authorization.settings.ClientS
 import org.springframework.security.oauth2.server.authorization.settings.OAuth2TokenFormat;
 import org.springframework.security.oauth2.server.authorization.settings.TokenSettings;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 
 import java.time.Duration;
 
@@ -19,21 +20,29 @@ import java.time.Duration;
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    @Order(1)
+    public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http) throws Exception {
+
         OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
 
-        http
-                .getConfigurer(OAuth2AuthorizationServerConfigurer.class)
-                .oidc(oidc -> oidc.clientRegistrationEndpoint(Customizer.withDefaults()));
-        http
-//                .authorizeHttpRequests(auth ->
-//                        auth.requestMatchers("/service/history/**").hasAuthority("SCOPE_ADMIN")
-//                                .anyRequest().authenticated())
-//                .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
-                .exceptionHandling(exceptions ->
-                        exceptions.authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"))
-                );
+        http.getConfigurer(OAuth2AuthorizationServerConfigurer.class)
+                .oidc(Customizer.withDefaults());
+
+        http.oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
+
         return http.build();
+
+    }
+
+    @Bean
+    public SecurityFilterChain resourceServerSecurityFilterChain(HttpSecurity http) throws Exception {
+        return http
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/oauth2/**", "/.well-known/**").permitAll()
+                        .anyRequest().authenticated())
+                .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
+                .build();
     }
 
     @Bean
