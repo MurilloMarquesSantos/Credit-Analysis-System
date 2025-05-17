@@ -55,7 +55,7 @@ public class UserService {
 
 
     public UserResponse saveUser(UserRequest request, String source) throws BadRequestException {
-        if (!source.equals(GOOGLE_SOURCE)){
+        if (!source.equals(GOOGLE_SOURCE)) {
             validateRequest(request);
         }
         User user = mapper.toUser(request);
@@ -82,14 +82,14 @@ public class UserService {
         if (isTokenValid(token, principal)) {
             return enableUserInternal(request, principal);
         }
-        throw new InvalidTokenException("This link is expired!");
+        throw new InvalidTokenException("Link has expired or is no longer valid!");
     }
 
     public UserEnabledResponse enableUser(String token, UserEnableRequest request, Principal principal) {
         if (isTokenValid(token, principal)) {
             return enableUserInternal(request, principal);
         }
-        throw new InvalidTokenException("This link is expired!");
+        throw new InvalidTokenException("Link has expired or is no longer valid!");
     }
 
     public void notifyUser(Jwt token) {

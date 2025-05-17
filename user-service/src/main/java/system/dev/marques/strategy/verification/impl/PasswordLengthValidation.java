@@ -1,8 +1,8 @@
 package system.dev.marques.strategy.verification.impl;
 
-import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Component;
 import system.dev.marques.domain.dto.requests.UserRequest;
+import system.dev.marques.exception.PasswordValidationException;
 import system.dev.marques.strategy.verification.NewAccountValidationStrategy;
 
 
@@ -14,9 +14,9 @@ public class PasswordLengthValidation implements NewAccountValidationStrategy {
     private static final String REGEX = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[\\W_]).+$";
 
     @Override
-    public void execute(UserRequest request) throws BadRequestException {
+    public void execute(UserRequest request) {
         if (!request.getPassword().matches(REGEX)) {
-            throw new BadRequestException(MESSAGE);
+            throw new PasswordValidationException(MESSAGE);
         }
 
     }
