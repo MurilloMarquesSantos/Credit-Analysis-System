@@ -18,6 +18,14 @@ spring:
           google:
             client-id: ${GOOGLE_CLIENT}
             client-secret: ${GOOGLE_SECRET}
+          client-credentials-client:
+            client-id: ${CLIENT_ID}
+            client-secret: ${CLIENT_SECRET}
+            authorization-grant-type: ${CLIENT_GRANT_TYPE}
+            scope: ${CLIENT_SCOPE}
+        provider:
+          client-credentials-client:
+            token-uri: http://localhost:8081/oauth2/token
   rabbitmq:
     host: localhost
     port: 5672
@@ -33,8 +41,6 @@ spring:
     exchange:
       notification: notification.exchange
       proposal: proposal.exchange
-
-
 
 google:
   default:

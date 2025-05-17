@@ -15,6 +15,7 @@ import system.dev.marques.service.UserService;
 import java.security.Principal;
 import java.util.List;
 
+//todo make the user history returns a pageable
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/home")
@@ -46,7 +47,6 @@ public class UserController {
                 .block();
 
         return ResponseEntity.ok(history);
-
     }
 
 }
