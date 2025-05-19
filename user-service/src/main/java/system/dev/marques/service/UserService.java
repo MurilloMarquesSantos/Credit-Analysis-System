@@ -5,7 +5,11 @@ import io.github.resilience4j.retry.annotation.Retry;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.coyote.BadRequestException;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
@@ -197,16 +201,34 @@ public class UserService {
 
     @Retry(name = "proposalService", fallbackMethod = "fallback")
     @CircuitBreaker(name = "proposalService", fallbackMethod = "fallback")
-    public List<ProposalHistoryResponse> fetchHistory(Long userId) {
-        return webClient.get()
+    public Page<ProposalHistoryResponse> fetchHistory(Long userId, Pageable pageable) {
+        List<ProposalHistoryResponse> userHistory = webClient.get()
                 .uri("/service/history/{id}", userId)
                 .retrieve()
                 .bodyToFlux(ProposalHistoryResponse.class)
                 .collectList()
                 .block();
+        if (userHistory == null || userHistory.isEmpty()) {
+            return Page.empty();
+        }
+
+        return toPage(pageable, userHistory);
+
     }
 
-    public List<ProposalHistoryResponse> fallback(Long userId, Throwable t) {
+
+    public Page<ProposalHistoryResponse> fallback(Long userId, Pageable pageable, Throwable t) {
+        log.error("Fallback triggered for fetchHistory with userId {}. Reason: {}", userId, t.getMessage());
         throw new ServiceUnavailableException("Service is currently unavailable. Please try again later.");
     }
+
+    @NotNull
+    private static PageImpl<ProposalHistoryResponse> toPage(Pageable pageable, List<ProposalHistoryResponse> userHistory) {
+        int start = Math.min((int) pageable.getOffset(), userHistory.size());
+        int end = Math.min(start + pageable.getPageSize(), userHistory.size());
+        List<ProposalHistoryResponse> paginated = userHistory.subList(start, end);
+
+        return new PageImpl<>(paginated, pageable, userHistory.size());
+    }
+
 }

@@ -3,6 +3,8 @@ package system.dev.marques.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +23,6 @@ import java.util.List;
 @RequestMapping("/home")
 public class UserController {
 
-    private final WebClient webClient;
 
     private final UserService userService;
 
@@ -37,9 +38,9 @@ public class UserController {
 
 
     @GetMapping("/user/history")
-    public ResponseEntity<List<ProposalHistoryResponse>> getUserHistory(Principal principal) {
+    public ResponseEntity<Page<ProposalHistoryResponse>> getUserHistory(Principal principal, Pageable pageable) {
         Long userId = Long.valueOf(principal.getName());
-        return ResponseEntity.ok(userService.fetchHistory(userId));
+        return ResponseEntity.ok(userService.fetchHistory(userId, pageable));
     }
 
 }
