@@ -10,7 +10,6 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
   security:
     oauth2:
       client:
@@ -41,7 +40,19 @@ spring:
     exchange:
       notification: notification.exchange
       proposal: proposal.exchange
-
+resilience4j:
+  circuitbreaker:
+    instances:
+      proposalService:
+        registerHealthIndicator: true
+        slidingWindowSize: 5
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10s
+  retry:
+    instances:
+      proposalService:
+        maxAttempts: 3
+        waitDuration: 2s
 google:
   default:
     password: ${GOOGLE_DEFAULT_PASSWORD}

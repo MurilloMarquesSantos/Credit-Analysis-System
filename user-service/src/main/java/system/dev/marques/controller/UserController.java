@@ -35,18 +35,11 @@ public class UserController {
         return new ResponseEntity<>(userService.saveAdmin(userRequest), HttpStatus.CREATED);
     }
 
+
     @GetMapping("/user/history")
     public ResponseEntity<List<ProposalHistoryResponse>> getUserHistory(Principal principal) {
         Long userId = Long.valueOf(principal.getName());
-
-        List<ProposalHistoryResponse> history = webClient.get()
-                .uri("/service/history/{id}", userId)
-                .retrieve()
-                .bodyToFlux(ProposalHistoryResponse.class)
-                .collectList()
-                .block();
-
-        return ResponseEntity.ok(history);
+        return ResponseEntity.ok(userService.fetchHistory(userId));
     }
 
 }

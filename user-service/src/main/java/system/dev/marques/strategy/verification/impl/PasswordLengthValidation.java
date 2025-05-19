@@ -2,7 +2,7 @@ package system.dev.marques.strategy.verification.impl;
 
 import org.springframework.stereotype.Component;
 import system.dev.marques.domain.dto.requests.UserRequest;
-import system.dev.marques.exception.PasswordValidationException;
+import system.dev.marques.exception.custom.PasswordValidationException;
 import system.dev.marques.strategy.verification.NewAccountValidationStrategy;
 
 

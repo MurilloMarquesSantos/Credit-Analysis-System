@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import system.dev.marques.exception.*;
+import system.dev.marques.exception.custom.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -44,6 +45,19 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
                         .fieldsMessages(rootMessage)
                         .path(request.getDescription(false))
                         .build(), HttpStatus.CONFLICT
+        );
+    }
+
+    @ExceptionHandler(ServiceUnavailableException.class)
+    public ResponseEntity<ExceptionDetails> handleUnavailableService(ServiceUnavailableException ex, WebRequest request) {
+        return new ResponseEntity<>(ExceptionDetails.builder()
+                .timestamp(LocalDateTime.now().format(dateTimeFormatter))
+                .status(HttpStatus.SERVICE_UNAVAILABLE)
+                .message("An error occurred while trying to fetch history")
+                .details(ex.getMessage())
+                .developerMessage(ex.getClass().getName())
+                .path(request.getDescription(false))
+                .build(), HttpStatus.SERVICE_UNAVAILABLE
         );
     }
 

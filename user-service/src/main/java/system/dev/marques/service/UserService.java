@@ -1,5 +1,7 @@
 package system.dev.marques.service;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.coyote.BadRequestException;
@@ -7,16 +9,19 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
 import system.dev.marques.domain.User;
 import system.dev.marques.domain.dto.rabbitmq.CreatedUserDto;
 import system.dev.marques.domain.dto.rabbitmq.ValidUserDto;
 import system.dev.marques.domain.dto.requests.UserEnableRequest;
 import system.dev.marques.domain.dto.requests.UserRequest;
 import system.dev.marques.domain.dto.requests.UserRequestGoogle;
+import system.dev.marques.domain.dto.responses.ProposalHistoryResponse;
 import system.dev.marques.domain.dto.responses.TokenLoginResponse;
 import system.dev.marques.domain.dto.responses.UserEnabledResponse;
 import system.dev.marques.domain.dto.responses.UserResponse;
-import system.dev.marques.exception.InvalidTokenException;
+import system.dev.marques.exception.custom.InvalidTokenException;
+import system.dev.marques.exception.custom.ServiceUnavailableException;
 import system.dev.marques.mapper.UserMapper;
 import system.dev.marques.repository.UserRepository;
 import system.dev.marques.strategy.enable.UserEnableStrategy;
@@ -25,6 +30,7 @@ import system.dev.marques.strategy.verification.UserValidationStrategyFactory;
 
 import java.security.Principal;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -52,6 +58,8 @@ public class UserService {
     private final ProducerService producerService;
 
     private static final String GOOGLE_SOURCE = "google";
+
+    private final WebClient webClient;
 
 
     public UserResponse saveUser(UserRequest request, String source) throws BadRequestException {
@@ -185,5 +193,20 @@ public class UserService {
 
     private void validateRequest(UserRequest request) throws BadRequestException {
         validationStrategyFactory.validate(request);
+    }
+
+    @Retry(name = "proposalService", fallbackMethod = "fallback")
+    @CircuitBreaker(name = "proposalService", fallbackMethod = "fallback")
+    public List<ProposalHistoryResponse> fetchHistory(Long userId) {
+        return webClient.get()
+                .uri("/service/history/{id}", userId)
+                .retrieve()
+                .bodyToFlux(ProposalHistoryResponse.class)
+                .collectList()
+                .block();
+    }
+
+    public List<ProposalHistoryResponse> fallback(Long userId, Throwable t) {
+        throw new ServiceUnavailableException("Service is currently unavailable. Please try again later.");
     }
 }

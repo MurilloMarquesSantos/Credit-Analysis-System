@@ -1,4 +1,4 @@
-package system.dev.marques.exception;
+package system.dev.marques.exception.custom;
 
 public class PasswordValidationException extends RuntimeException {
     public PasswordValidationException(String message) {
