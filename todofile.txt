@@ -1,4 +1,8 @@
 CRIAR E COLOCAR OS CONTAINERS EM NETWORKS PARA FUTUROS BUILD
+PARA TEST CONTAINERS LEMBRAR DE USAR "static MySQLContainer<?> mysql = new MySQLContainer<>("mysql:8.0.28")
+                                              .withReuse(true);"
+                                              PARA QUE NÃO PRECISE SUBIR UM CONTAINER NOVO TODA VEZ QUE INICAR UM CLASSE DE TESTE
+                                              MELHOR OTIMIZAÇÃO
 
 1. Auth/User-Service (porta 8081)
 🔹 Responsável por:

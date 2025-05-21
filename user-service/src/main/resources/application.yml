@@ -1,5 +1,10 @@
 server:
   port: 8080
+jwt:
+  public:
+    key: classpath:config/app.pubKey
+  private:
+    key: classpath:config/app.privKey
 spring:
   application:
     name: user-service
@@ -56,3 +61,7 @@ resilience4j:
 google:
   default:
     password: ${GOOGLE_DEFAULT_PASSWORD}
+
+logging:
+  level:
+    org.springframework.security: DEBUG

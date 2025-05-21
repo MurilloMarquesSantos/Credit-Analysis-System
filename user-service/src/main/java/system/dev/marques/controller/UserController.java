@@ -8,16 +8,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.reactive.function.client.WebClient;
 import system.dev.marques.domain.dto.requests.UserRequest;
 import system.dev.marques.domain.dto.responses.ProposalHistoryResponse;
 import system.dev.marques.domain.dto.responses.UserResponse;
 import system.dev.marques.service.UserService;
 
 import java.security.Principal;
-import java.util.List;
 
-//todo make the user history returns a pageable
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/home")
