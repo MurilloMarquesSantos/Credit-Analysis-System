@@ -32,5 +32,4 @@ build/
 ### VS Code ###
 .vscode/
 
-/config/*.privKey
-/config/*.pubKey
+/user-service/config/
