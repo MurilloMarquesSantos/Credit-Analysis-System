@@ -56,8 +56,8 @@ public class TokenService {
         String token = UUID.randomUUID().toString();
 
         EnableUserToken tokenToSave = EnableUserToken.builder()
-                .userId(user.getId()).
-                token(token)
+                .userId(user.getId())
+                .token(token)
                 .expirationDate(LocalDateTime.now().plusMinutes(10)).build();
 
         tokenRepository.save(tokenToSave);

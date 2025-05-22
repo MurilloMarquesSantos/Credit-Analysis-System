@@ -37,18 +37,15 @@ public class AbstractIntegration {
 
             Map<String, Object> props = new HashMap<>();
 
-            // MySQL properties
             props.put("spring.datasource.url", mysql.getJdbcUrl());
             props.put("spring.datasource.username", mysql.getUsername());
             props.put("spring.datasource.password", mysql.getPassword());
 
-            // RabbitMQ properties
             props.put("spring.rabbitmq.host", rabbit.getHost());
             props.put("spring.rabbitmq.port", rabbit.getAmqpPort());
             props.put("spring.rabbitmq.username", rabbit.getAdminUsername());
             props.put("spring.rabbitmq.password", rabbit.getAdminPassword());
 
-            // Queues and exchanges
             props.put("spring.rabbitmq.queue.proposal", "queue.proposal");
             props.put("spring.rabbitmq.queue.notification-created", "queue.notification.user.created");
             props.put("spring.rabbitmq.queue.notification-validation", "queue.notification.user.validation");

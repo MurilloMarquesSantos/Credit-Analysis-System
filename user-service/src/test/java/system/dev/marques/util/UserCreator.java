@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import system.dev.marques.domain.User;
+import system.dev.marques.domain.dto.requests.UserEnableRequest;
 import system.dev.marques.domain.dto.requests.UserRequest;
+import system.dev.marques.domain.dto.requests.UserRequestGoogle;
 import system.dev.marques.repository.RolesRepository;
 
 import java.util.Set;
@@ -60,6 +62,22 @@ public class UserCreator {
                 .password(encoder.encode("Murillo@12345"))
                 .roles(Set.of(rolesRepository.findByName("USER").orElseThrow()))
                 .valid(false)
+                .build();
+    }
+
+    public UserEnableRequest createUserEnableRequest() {
+        return UserEnableRequest.builder()
+                .income(5000D)
+                .build();
+    }
+
+    public UserRequestGoogle createUserRequestGoogle() {
+        return UserRequestGoogle.builder()
+                .name("Murillo Marques")
+                .cpf("01234567890")
+                .phoneNumber("1196637892")
+                .income(5000.0D)
+                .password("Murillo@12345")
                 .build();
     }
 }
