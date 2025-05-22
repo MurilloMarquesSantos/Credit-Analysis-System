@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -113,6 +114,18 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         );
     }
 
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ExceptionDetails> handleAccessDenied(AccessDeniedException ex, WebRequest request) {
+        return new ResponseEntity<>(ExceptionDetails.builder()
+                .timestamp(LocalDateTime.now().format(dateTimeFormatter))
+                .status(HttpStatus.FORBIDDEN)
+                .message("You do not have access to this resource")
+                .details(ex.getMessage())
+                .developerMessage(ex.getClass().getName())
+                .path(request.getDescription(false))
+                .build(), HttpStatus.FORBIDDEN
+        );
+    }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ExceptionDetails> handleGlobalException(Exception ex, WebRequest request) {

@@ -65,3 +65,7 @@ google:
 logging:
   level:
     org.springframework.security: DEBUG
+
+proposal:
+  service:
+    url: http://localhost:8081

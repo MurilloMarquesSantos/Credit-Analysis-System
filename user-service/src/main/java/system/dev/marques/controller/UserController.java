@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import system.dev.marques.domain.dto.requests.UserRequest;
 import system.dev.marques.domain.dto.responses.ProposalHistoryResponse;
@@ -28,6 +29,7 @@ public class UserController {
         return new ResponseEntity<>(userService.saveUser(userRequest, "formlogin"), HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/create-admin")
     public ResponseEntity<UserResponse> createAdmin(@RequestBody @Valid UserRequest userRequest) throws BadRequestException {
         return new ResponseEntity<>(userService.saveAdmin(userRequest), HttpStatus.CREATED);
