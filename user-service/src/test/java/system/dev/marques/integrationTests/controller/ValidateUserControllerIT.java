@@ -82,6 +82,7 @@ class ValidateUserControllerIT extends AbstractIntegration {
     @AfterEach
     void setUpAfterEach() {
         userRepository.deleteAll();
+        roleRepository.deleteAll();
     }
 
     private String generateToken(User user) {
@@ -114,7 +115,7 @@ class ValidateUserControllerIT extends AbstractIntegration {
                 .setPort(8886)
                 .build();
 
-        String returnedContent = RestAssured.given()
+        String postResponse = RestAssured.given()
                 .spec(spec)
                 .contentType("application/json")
                 .header("Authorization", "Bearer " + token)
@@ -127,7 +128,7 @@ class ValidateUserControllerIT extends AbstractIntegration {
                 .extract()
                 .body().asString();
 
-        UserEnabledResponse response = mapper.readValue(returnedContent, UserEnabledResponse.class);
+        UserEnabledResponse response = mapper.readValue(postResponse, UserEnabledResponse.class);
 
         assertThat(response).isNotNull();
 
@@ -148,7 +149,7 @@ class ValidateUserControllerIT extends AbstractIntegration {
                 .setPort(8886)
                 .build();
 
-        String returnedContent = RestAssured.given()
+        String postResponse = RestAssured.given()
                 .spec(spec)
                 .contentType("application/json")
                 .header("Authorization", "Bearer " + token)
@@ -161,7 +162,7 @@ class ValidateUserControllerIT extends AbstractIntegration {
                 .extract()
                 .body().asString();
 
-        UserEnabledResponse response = mapper.readValue(returnedContent, UserEnabledResponse.class);
+        UserEnabledResponse response = mapper.readValue(postResponse, UserEnabledResponse.class);
 
         assertThat(response).isNotNull();
 

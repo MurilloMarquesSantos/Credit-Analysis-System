@@ -62,10 +62,6 @@ google:
   default:
     password: ${GOOGLE_DEFAULT_PASSWORD}
 
-logging:
-  level:
-    org.springframework.security: DEBUG
-
 proposal:
   service:
     url: http://localhost:8081

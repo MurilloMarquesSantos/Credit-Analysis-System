@@ -126,6 +126,7 @@ class UserControllerIT extends AbstractIntegration {
     @AfterEach
     void afterEachSetUp() {
         userRepository.deleteAll();
+        roleRepository.deleteAll();
     }
 
     private String generateToken(User user) {
@@ -154,7 +155,7 @@ class UserControllerIT extends AbstractIntegration {
                 .setPort(8888)
                 .build();
 
-        String returnedContent = RestAssured.given()
+        String postResponse = RestAssured.given()
                 .spec(spec)
                 .contentType("application/json")
                 .body(userRequest)
@@ -165,7 +166,7 @@ class UserControllerIT extends AbstractIntegration {
                 .extract()
                 .body().asString();
 
-        UserResponse userResponse = mapper.readValue(returnedContent, UserResponse.class);
+        UserResponse userResponse = mapper.readValue(postResponse, UserResponse.class);
 
         assertThat(userResponse.getEmail()).isEqualTo(userRequest.getEmail());
     }
@@ -179,7 +180,7 @@ class UserControllerIT extends AbstractIntegration {
                 .setPort(8888)
                 .build();
 
-        String returnedContent = RestAssured.given()
+        String postResponse = RestAssured.given()
                 .spec(spec)
                 .contentType("application/json")
                 .header("Authorization", "Bearer " + token)
@@ -192,7 +193,7 @@ class UserControllerIT extends AbstractIntegration {
                 .body().asString();
 
 
-        UserResponse userResponse = mapper.readValue(returnedContent, UserResponse.class);
+        UserResponse userResponse = mapper.readValue(postResponse, UserResponse.class);
 
         assertThat(userResponse.getEmail()).isEqualTo(userRequest.getEmail());
     }
@@ -226,7 +227,7 @@ class UserControllerIT extends AbstractIntegration {
                 .setPort(8888)
                 .build();
 
-        String returnedContent = RestAssured.given()
+        String getResponse = RestAssured.given()
                 .spec(spec)
                 .queryParam("page", 0)
                 .queryParam("size", 5)
@@ -238,7 +239,7 @@ class UserControllerIT extends AbstractIntegration {
                 .body().asString();
 
         PageResponse<ProposalHistoryResponse> page = mapper.readValue(
-                returnedContent, new TypeReference<>() {
+                getResponse, new TypeReference<>() {
                 });
 
         assertThat(page.getContent()).hasSize(1);
