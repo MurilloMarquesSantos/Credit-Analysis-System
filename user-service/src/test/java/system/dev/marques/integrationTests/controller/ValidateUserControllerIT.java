@@ -170,5 +170,49 @@ class ValidateUserControllerIT extends AbstractIntegration {
         assertThat(response.getEmail()).isEqualTo(savedUser.getEmail());
     }
 
+    @Test
+    void enableUserForm_ReturnsEUnauthorized401_WhenNoTokenIsGiven(){
+
+        UserEnableRequest userEnableRequest = userCreator.createUserEnableRequest();
+
+        spec = new RequestSpecBuilder()
+                .setBasePath("/validate/form-login")
+                .setPort(8886)
+                .build();
+
+        RestAssured.given()
+                .spec(spec)
+                .contentType("application/json")
+                .queryParam("token", enableToken)
+                .body(userEnableRequest)
+                .when()
+                .post()
+                .then()
+                .statusCode(401);
+    }
+
+    @Test
+    void enableUserForm_ReturnsInvalidTokenException410_WhenTokenIsInvalid(){
+
+        UserEnableRequest userEnableRequest = userCreator.createUserEnableRequest();
+
+        String token = generateToken(savedUser);
+
+        spec = new RequestSpecBuilder()
+                .setBasePath("/validate/form-login")
+                .setPort(8886)
+                .build();
+
+        RestAssured.given()
+                .spec(spec)
+                .contentType("application/json")
+                .header("Authorization", "Bearer " + token)
+                .queryParam("token", "")
+                .body(userEnableRequest)
+                .when()
+                .post()
+                .then()
+                .statusCode(410);
+    }
 
 }
