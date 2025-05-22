@@ -22,7 +22,7 @@ public class ValidateUserController {
     @PostMapping("/google")
     public ResponseEntity<UserEnabledResponse> enableUserGoogle(@RequestParam String token,
                                                                 @RequestBody @Valid UserRequestGoogle requestGoogle
-            , Principal principal) throws Exception {
+            , Principal principal) {
         return new ResponseEntity<>(userService.enableUserFromGoogle(token, requestGoogle, principal),
                 HttpStatus.CREATED);
     }
@@ -30,7 +30,7 @@ public class ValidateUserController {
     @PostMapping("/form-login")
     public ResponseEntity<UserEnabledResponse> enableUserForm(@RequestParam String token,
                                                               @RequestBody @Valid UserEnableRequest request
-            , Principal principal) throws Exception {
+            , Principal principal) {
         return new ResponseEntity<>(userService.enableUser(token, request, principal), HttpStatus.CREATED);
     }
 

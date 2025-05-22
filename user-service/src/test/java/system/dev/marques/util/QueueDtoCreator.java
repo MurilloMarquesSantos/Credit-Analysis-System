@@ -1,0 +1,38 @@
+package system.dev.marques.util;
+
+import system.dev.marques.domain.dto.proposal.ProposalUserInfo;
+import system.dev.marques.domain.dto.rabbitmq.CreatedUserDto;
+import system.dev.marques.domain.dto.rabbitmq.ValidUserDto;
+
+public class QueueDtoCreator {
+
+    public static ProposalUserInfo createProposalUserInfo() {
+        return ProposalUserInfo.builder()
+                .userId(1L)
+                .cpf("01234567890")
+                .userEmail("murillo@gmail.com")
+                .userName("Murillo")
+                .userIncome(5000.0D)
+                .requestedAmount(7000.0D)
+                .installments(60)
+                .purpose("Buy a car")
+                .build();
+
+    }
+
+    public static ValidUserDto createValidUserDto() {
+        return ValidUserDto.builder()
+                .email("murillo@gmail.com")
+                .url("http://murillo.com")
+                .source("formlogin")
+                .build();
+    }
+
+    public static CreatedUserDto createCreatedUserDto() {
+        return CreatedUserDto.builder()
+                .email("murillo@gmail.com")
+                .name("Murillo Marques")
+                .url("http://murillo.com")
+                .build();
+    }
+}
