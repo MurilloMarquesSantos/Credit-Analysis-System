@@ -72,7 +72,7 @@ class UserControllerIT extends AbstractIntegration {
 
 
     @BeforeAll
-    static void setUpBeforeAll() {
+    static void initAll() {
         mapper = new ObjectMapper();
         mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         mapper.registerModule(new JavaTimeModule());
@@ -124,7 +124,7 @@ class UserControllerIT extends AbstractIntegration {
     }
 
     @AfterEach
-    void afterEachSetUp() {
+    void tearDown() {
         userRepository.deleteAll();
         roleRepository.deleteAll();
     }

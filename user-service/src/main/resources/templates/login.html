@@ -46,20 +46,20 @@
     <h3 class="text-center mb-4">Entrar na Conta</h3>
     <form method="post" th:action="@{/login}">
         <div class="mb-3">
-            <label for="email" class="form-label">Usuário</label>
-            <input type="text" class="form-control" id="email" name="username" placeholder="Digite seu email" required>
+            <label for="email" class="form-label">User</label>
+            <input type="text" class="form-control" id="email" name="username" placeholder="Enter you email" required>
         </div>
         <div class="mb-3">
-            <label for="password" class="form-label">Senha</label>
-            <input type="password" class="form-control" id="password" name="password" placeholder="Digite sua senha" required>
+            <label for="password" class="form-label">Password</label>
+            <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
         </div>
         <div class="d-grid mb-3">
-            <button type="submit" class="btn btn-primary">Entrar</button>
+            <button type="submit" class="btn btn-primary">Login</button>
         </div>
     </form>
     <br />
     <hr />
-    <a th:href="@{/oauth2/authorization/google}" class="btn btn-primary">Entrar com Google</a>
+    <a th:href="@{/oauth2/authorization/google}" class="btn btn-primary">Sign in with Google</a>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

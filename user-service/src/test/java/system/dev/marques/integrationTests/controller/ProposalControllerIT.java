@@ -56,7 +56,7 @@ class ProposalControllerIT extends AbstractIntegration {
     }
 
     @AfterEach
-    void setUpAfterEach() {
+    void tearDown() {
         userRepository.deleteAll();
         roleRepository.deleteAll();
     }

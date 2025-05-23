@@ -4,7 +4,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -26,7 +25,6 @@ import java.util.Set;
 
 @Component
 @RequiredArgsConstructor
-@Log4j2
 public class SocialLoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
 
     @Value("${google.default.password}")
@@ -56,8 +54,6 @@ public class SocialLoginSuccessHandler extends SavedRequestAwareAuthenticationSu
                 });
 
         TokenLoginResponse jwt = tokenService.generateToken(user);
-
-        log.info("Login com sucesso para o usuário: {}", email);
 
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
