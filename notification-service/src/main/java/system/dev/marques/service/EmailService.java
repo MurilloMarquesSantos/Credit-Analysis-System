@@ -8,6 +8,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import system.dev.marques.dto.CreatedUserDto;
+import system.dev.marques.dto.ProposalNotificationDto;
 import system.dev.marques.dto.ProposalStatusEmailDto;
 import system.dev.marques.dto.ValidUserDto;
 
@@ -15,6 +16,8 @@ import system.dev.marques.dto.ValidUserDto;
 @RequiredArgsConstructor
 @Log4j2
 public class EmailService {
+
+    private static final String ERROR_MESSAGE = "Unable to send email: {}";
 
     private final JavaMailSender mailSender;
 
@@ -27,7 +30,7 @@ public class EmailService {
             helper.setText("Link for validation: " + dto.getUrl(), true);
             mailSender.send(message);
         } catch (MessagingException e) {
-            log.error("Enable to send email: {}", e.getMessage());
+            log.error(ERROR_MESSAGE, e.getMessage());
         }
 
     }
@@ -55,12 +58,11 @@ public class EmailService {
             helper.setText(emailBody, true);
             mailSender.send(message);
         } catch (MessagingException e) {
-            log.error("Enable to send email: {}", e.getMessage());
+            log.error(ERROR_MESSAGE, e.getMessage());
         }
     }
 
     public void sendProposalStatusEmail(ProposalStatusEmailDto dto) {
-        log.info(dto);
         if (dto.getStatus().equals("REJECTED")) {
             dto.setStatus("REJECTED. Reason: " + dto.getRejectedReason());
         }
@@ -91,8 +93,33 @@ public class EmailService {
             helper.setText(emailBody, true);
             mailSender.send(message);
         } catch (MessagingException e) {
-            log.error("Enable to send email: {}", e.getMessage());
+            log.error(ERROR_MESSAGE, e.getMessage());
         }
+    }
+
+    public void sendProposalReceiptUrl(ProposalNotificationDto dto) {
+        MimeMessage message = mailSender.createMimeMessage();
+        try {
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            helper.setTo(dto.getUserEmail());
+            String emailBody = String.format(
+                    "<div style='font-family: Arial, sans-serif; color: #333;'>"
+                            + "<p>Hello %s,</p>"
+                            + "<p>Here is your link to download your receipt:</p>"
+                            + "<p><strong>%s</strong></p>"
+                            + "<p><strong>This link expires in 1 hour!</strong></p>"
+                            + "<br>"
+                            + "</div>",
+                    dto.getUserName(),
+                    dto.getUrl()
+            );
+            helper.setSubject("PROPOSAL RECEIPT");
+            helper.setText(emailBody, true);
+            mailSender.send(message);
+        } catch (MessagingException e) {
+            log.error(ERROR_MESSAGE, e.getMessage());
+        }
+
     }
 
 }

@@ -5,6 +5,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Service;
 import system.dev.marques.dto.CreatedUserDto;
+import system.dev.marques.dto.ProposalNotificationDto;
 import system.dev.marques.dto.ProposalStatusEmailDto;
 import system.dev.marques.dto.ValidUserDto;
 import system.dev.marques.service.EmailService;
@@ -30,5 +31,10 @@ public class NotificationListener {
     @RabbitListener(queues = "queue.proposal.status")
     public void listenProposalStatusQueue(ProposalStatusEmailDto dto) {
         emailService.sendProposalStatusEmail(dto);
+    }
+
+    @RabbitListener(queues = "queue.notification.receipt")
+    public void listenProposalReceiptQueue(ProposalNotificationDto dto) {
+        emailService.sendProposalReceiptUrl(dto);
     }
 }

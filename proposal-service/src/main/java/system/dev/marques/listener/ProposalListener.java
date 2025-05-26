@@ -1,7 +1,6 @@
 package system.dev.marques.listener;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Service;
 import system.dev.marques.domain.Proposal;
@@ -13,7 +12,6 @@ import system.dev.marques.service.ProducerService;
 import system.dev.marques.service.ProposalService;
 
 @Service
-@Log4j2
 @RequiredArgsConstructor
 public class ProposalListener {
 
@@ -35,7 +33,6 @@ public class ProposalListener {
 
     @RabbitListener(queues = "queue.analyzed.credit")
     public void listerAnalyzedProposalQueue(AnalyzedDto dto) {
-        log.info("analyzed proposal: {}", dto);
         proposalService.updateProposalStatus(dto);
     }
 

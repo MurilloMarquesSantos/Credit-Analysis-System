@@ -2,29 +2,53 @@ package system.dev.marques.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
+import system.dev.marques.dto.ApprovedProposalDto;
+import system.dev.marques.dto.ProposalNotificationDto;
+import system.dev.marques.mapper.ProposalMapper;
 
 import java.net.URL;
 import java.time.Duration;
 
-@Component
+@Service
 @RequiredArgsConstructor
 public class S3Service {
+
+    private final PdfGeneratorService pdfGenerator;
 
     private final S3Client s3Client;
 
     private final S3Presigner s3Presigner;
 
+    private final ProducerService producerService;
+
+    private final ProposalMapper mapper;
+
     @Value("${spring.cloud.aws.s3.bucket}")
     private String bucketName;
 
+    public void upload(ApprovedProposalDto dto) {
 
-    public String upload(byte[] pdf, String key) {
+        byte[] pdf = pdfGenerator.generate(dto);
+
+        String key = "receipts/user-" + dto.getUserId() + "/proposal-" + dto.getProposalId();
+
+        String url = uploadAndGetUrl(pdf, key);
+
+        ProposalNotificationDto proposalNotificationDto = mapper.toProposalNotificationDto(dto);
+
+        proposalNotificationDto.setUrl(url);
+
+        producerService.sendNotification(proposalNotificationDto);
+    }
+
+
+    private String uploadAndGetUrl(byte[] pdf, String key) {
         PutObjectRequest putRequest = PutObjectRequest.
                 builder()
                 .bucket(bucketName)

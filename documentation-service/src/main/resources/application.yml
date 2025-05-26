@@ -18,3 +18,8 @@ spring:
     listener:
       simple:
         auto-startup: true
+    queue:
+      notification:
+        proposal-receipt: queue.notification.receipt
+    exchange:
+      notification: notification.receipt.exchange
