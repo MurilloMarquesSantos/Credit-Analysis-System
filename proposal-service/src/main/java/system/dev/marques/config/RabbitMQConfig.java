@@ -10,6 +10,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMQConfig {
 
+    @Value("${spring.rabbitmq.queue.documentation.documentation-info}")
+    private String documentQueueName;
+
     @Value("${spring.rabbitmq.queue.credit.analysis}")
     private String creditQueueName;
 
@@ -29,6 +32,9 @@ public class RabbitMQConfig {
     @Value("${spring.rabbitmq.exchange.proposal-notification}")
     private String notificationExchangeName;
 
+    @Value("${spring.rabbitmq.exchange.documentation}")
+    private String documentExchangeName;
+
     @Bean
     public Queue creditQueue() {
         return QueueBuilder.durable(creditQueueName).build();
@@ -42,6 +48,16 @@ public class RabbitMQConfig {
     @Bean
     public Queue notificationQueue() {
         return QueueBuilder.durable(notificationStatusQueueName).build();
+    }
+
+    @Bean
+    public Queue documentationQueue() {
+        return QueueBuilder.durable(documentQueueName).build();
+    }
+
+    @Bean
+    public DirectExchange documentExchange() {
+        return new DirectExchange(documentExchangeName);
     }
 
     @Bean
@@ -84,6 +100,13 @@ public class RabbitMQConfig {
                 .with("status.queue");
     }
 
+    @Bean
+    public Binding bindingDocumentation() {
+        return BindingBuilder
+                .bind(documentationQueue())
+                .to(documentExchange())
+                .with("document.queue");
+    }
 
 
     @Bean

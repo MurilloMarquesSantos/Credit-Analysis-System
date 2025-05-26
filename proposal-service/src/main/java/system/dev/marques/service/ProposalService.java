@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import system.dev.marques.domain.Proposal;
 import system.dev.marques.domain.dto.AnalyzedDto;
+import system.dev.marques.domain.dto.ApprovedProposalDto;
 import system.dev.marques.domain.dto.ProposalDto;
 import system.dev.marques.domain.dto.ProposalStatusEmailDto;
 import system.dev.marques.domain.dto.reponse.ProposalHistoryResponse;
@@ -38,6 +39,10 @@ public class ProposalService {
             ProposalStatusEmailDto emailDto = mapper.toProposalStatusEmailDto(savedProposal);
             emailDto.setRejectedReason(dto.getRejectedReason());
             producerService.sendProposalStatus(emailDto);
+            if (dto.getStatus() == ProposalStatus.APPROVED) {
+                ApprovedProposalDto approvedDto = mapper.toApprovedProposalDto(savedProposal);
+                producerService.sendApprovedProposal(approvedDto);
+            }
         }
     }
 

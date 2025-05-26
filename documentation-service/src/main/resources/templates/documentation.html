@@ -1,0 +1,14 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<body>
+<h1>Approved Proposal Receipt</h1>
+<p>Proposal ID: <span th:text="${dto.proposalId}"/></p>
+<p>User: <span th:text="${dto.userName}"/></p>
+<p>Cpf: <span th:text="${dto.cpf}"/></p>
+<p>Income: <span th:text="${dto.userIncome}"/></p>
+<p>Amount: $ <span th:text="${dto.requestedAmount}"/></p>
+<p>Installments: <span th:text="${dto.installments}"/></p>
+<p>Installments Value: $ <span th:text="${#numbers.formatDecimal(dto.installmentsValue, 0, 2)}"/></p>
+<p>Purpose: <span th:text="${dto.purpose}"/></p>
+<p>Requested at: <span th:text="${dto.formattedCreatedAt}"/></p>
+</body>
+</html>

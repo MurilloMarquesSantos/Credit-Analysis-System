@@ -26,6 +26,7 @@
         <module>notification-service</module>
         <module>proposal-service</module>
         <module>credit-analysis-service</module>
+        <module>documentation-service</module>
     </modules>
     <scm>
         <connection/>

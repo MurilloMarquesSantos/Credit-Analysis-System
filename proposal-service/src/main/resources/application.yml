@@ -24,7 +24,10 @@ spring:
         analyzed-credit: queue.analyzed.credit
       notification:
         proposal-status: queue.proposal.status
+      documentation:
+        documentation-info: queue.documentation
     exchange:
       credit: credit.exchange
       analyzed-credit: analyzed.exchange
       proposal-notification: status.exchange
+      documentation: document.exchange

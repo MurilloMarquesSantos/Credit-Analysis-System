@@ -3,6 +3,7 @@ package system.dev.marques.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import system.dev.marques.domain.Proposal;
+import system.dev.marques.domain.dto.ApprovedProposalDto;
 import system.dev.marques.domain.dto.ProposalCreditDto;
 import system.dev.marques.domain.dto.ProposalDto;
 import system.dev.marques.domain.dto.ProposalStatusEmailDto;
@@ -20,4 +21,7 @@ public interface ProposalMapper {
     ProposalHistoryResponse toProposalHistoryResponse(Proposal proposal);
 
     ProposalStatusEmailDto toProposalStatusEmailDto(Proposal proposal);
+
+    @Mapping(target = "proposalId", source = "proposal.id")
+    ApprovedProposalDto toApprovedProposalDto(Proposal proposal);
 }
