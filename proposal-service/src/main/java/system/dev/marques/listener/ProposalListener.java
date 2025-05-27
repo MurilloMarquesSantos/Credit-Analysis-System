@@ -32,8 +32,13 @@ public class ProposalListener {
     }
 
     @RabbitListener(queues = "queue.analyzed.credit")
-    public void listerAnalyzedProposalQueue(AnalyzedDto dto) {
+    public void listenAnalyzedProposalQueue(AnalyzedDto dto) {
         proposalService.updateProposalStatus(dto);
+    }
+
+    @RabbitListener(queues = "queue.proposal.delete")
+    public void listenProposalDeleteQueue(Long id) {
+        proposalService.deleteUserHistory(id);
     }
 
 }

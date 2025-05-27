@@ -10,7 +10,6 @@ import system.dev.marques.mapper.UserMapper;
 import system.dev.marques.repository.UserRepository;
 
 import java.time.LocalDate;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -27,16 +26,19 @@ public class AdminService {
     }
 
     public void deleteUser(long userId) {
-        if (!userRepository.existsById(userId)) {
-            throw new IllegalArgumentException("This user does not exists or have been already deleted");
-        }
-        Optional<User> userOpt = userRepository.findById(userId);
+        User user = userRepository.findById(userId)
+                .orElseThrow(
+                        () -> new IllegalArgumentException("This user does not exists or have been already deleted"));
 
-        userRepository.deleteById(userId);
+        userRepository.deleteById(user.getId());
 
-        userOpt.ifPresent(this::notifyUserDeletion);
+        notifyAll(user);
+    }
 
-        userOpt.ifPresent(this::notifyDocumentDeletion);
+    private void notifyAll(User user) {
+        notifyUserDeletion(user);
+        notifyDocumentDeletion(user);
+        notifyProposalDelete(user);
     }
 
     private void notifyUserDeletion(User user) {
@@ -49,6 +51,10 @@ public class AdminService {
 
     private void notifyDocumentDeletion(User user) {
         producerService.sendDocumentDeletion(user.getId());
+    }
+
+    private void notifyProposalDelete(User user) {
+        producerService.sendProposalDeletion(user.getId());
     }
 
 }

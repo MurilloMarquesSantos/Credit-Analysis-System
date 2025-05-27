@@ -40,6 +40,7 @@ spring:
         auto-startup: true
     queue:
       proposal: queue.proposal
+      proposal-delete: queue.proposal.delete
       notification-validation: queue.notification.user.validation
       notification-created: queue.notification.user.created
       notification-delete-user: queue.notification.user.delete

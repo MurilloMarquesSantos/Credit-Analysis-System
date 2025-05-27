@@ -52,4 +52,9 @@ public class ProposalService {
                 .map(mapper::toProposalHistoryResponse)
                 .toList();
     }
+
+    public void deleteUserHistory(Long userId) {
+        List<Proposal> userHistory = proposalRepository.findByUserId(userId);
+        userHistory.forEach(p -> proposalRepository.deleteById(p.getId()));
+    }
 }

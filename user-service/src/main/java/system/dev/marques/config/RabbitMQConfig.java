@@ -44,6 +44,9 @@ public class RabbitMQConfig {
     @Value("${spring.rabbitmq.exchange.documentation}")
     private String documentationExchangeName;
 
+    @Value("${spring.rabbitmq.queue.proposal-delete}")
+    private String proposalDeleteQueueName;
+
     @Bean
     public Queue userValidationQueue() {
         return QueueBuilder.durable(notificationValidationQueue).build();
@@ -54,6 +57,10 @@ public class RabbitMQConfig {
         return QueueBuilder.durable(notificationCreateQueue).build();
     }
 
+    @Bean
+    public Queue proposalDeleteQueue() {
+        return QueueBuilder.durable(proposalDeleteQueueName).build();
+    }
     @Bean
     public Queue userDeleteQueue() {
         return QueueBuilder.durable(notificationDeleteQueue).build();
@@ -91,8 +98,8 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    public DirectExchange proposalExchange() {
-        return new DirectExchange(proposalExchangeName);
+    public TopicExchange proposalExchange() {
+        return new TopicExchange(proposalExchangeName);
     }
 
     @Bean
@@ -117,6 +124,14 @@ public class RabbitMQConfig {
                 .bind(proposalQueue())
                 .to(proposalExchange())
                 .with("proposal.queue");
+    }
+
+    @Bean
+    public Binding bindingProposalDelete() {
+        return BindingBuilder
+                .bind(proposalDeleteQueue())
+                .to(proposalExchange())
+                .with("proposal.delete");
     }
 
     @Bean
