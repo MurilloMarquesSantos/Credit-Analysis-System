@@ -3,21 +3,21 @@ package system.dev.marques.service;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import system.dev.marques.dto.CreatedUserDto;
-import system.dev.marques.dto.ProposalNotificationDto;
-import system.dev.marques.dto.ProposalStatusEmailDto;
-import system.dev.marques.dto.ValidUserDto;
+import system.dev.marques.dto.*;
+import system.dev.marques.exception.EmailSendingException;
 
 @Service
 @RequiredArgsConstructor
-@Log4j2
 public class EmailService {
 
-    private static final String ERROR_MESSAGE = "Unable to send email: {}";
+    @Value("${spring.mail.username}")
+    private String email;
+
+    private static final String ERROR_MESSAGE = "Unable to send email: ";
 
     private final JavaMailSender mailSender;
 
@@ -30,7 +30,7 @@ public class EmailService {
             helper.setText("Link for validation: " + dto.getUrl(), true);
             mailSender.send(message);
         } catch (MessagingException e) {
-            log.error(ERROR_MESSAGE, e.getMessage());
+            throw new EmailSendingException(ERROR_MESSAGE + e);
         }
 
     }
@@ -45,6 +45,8 @@ public class EmailService {
                         + "<p>Your account has been created, but you must validate it!</p>"
                         + "<p><strong>Here is your link! It can only be accessed once and it expires in 10 minutes:</strong></p>"
                         + "<p>%s</p>"
+                        + "<p>Best regards,</p>"
+                        + "<p>Credit System</p>"
                         + "<br>"
                         + "</div>",
                 dto.getName(),
@@ -58,7 +60,65 @@ public class EmailService {
             helper.setText(emailBody, true);
             mailSender.send(message);
         } catch (MessagingException e) {
-            log.error(ERROR_MESSAGE, e.getMessage());
+            throw new EmailSendingException(ERROR_MESSAGE + e);
+        }
+    }
+
+    public void sendUserDeleteFormEmail(DeleteUserDto dto) {
+        MimeMessage message = mailSender.createMimeMessage();
+
+        String emailBody = String.format(
+                "<div style='font-family: Arial, sans-serif; color: #333;'>"
+                        + "<h2>Delete Request</h2>"
+                        + "<p>Hello Admin,</p>"
+                        + "<p>This user has requested an account deletion: %s</p>"
+                        + "<p>User id: %d</p>"
+                        + "<p>Request Reason:</p>"
+                        + "<p><strong>%s</strong></p>"
+                        + "<p>Best regards,</p>"
+                        + "<p>Credit System</p>"
+                        + "<br>"
+                        + "</div>",
+                dto.getUserEmail(),
+                dto.getUserId(),
+                dto.getReason()
+        );
+        try {
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            helper.setTo(email);
+            helper.setBcc(dto.getAdminEmails().toArray(new String[0]));
+            helper.setSubject("User Account Deletion Request");
+            helper.setText(emailBody, true);
+            mailSender.send(message);
+        } catch (MessagingException e) {
+            throw new EmailSendingException(ERROR_MESSAGE + e);
+        }
+    }
+
+    public void sendDeletionConfirmation(DeleteUserConfirmationDto dto) {
+        MimeMessage message = mailSender.createMimeMessage();
+
+        String emailBody = String.format(
+                "<div style='font-family: Arial, sans-serif; color: #333;'>"
+                        + "<h2>Delete Request</h2>"
+                        + "<p>Hello %s,</p>"
+                        + "<p><strong>Your account has been successfully deleted</strong></p>"
+                        + "<p>Date: %s</p>"
+                        + "<p>Best regards,</p>"
+                        + "<p>Credit System</p>"
+                        + "<br>"
+                        + "</div>",
+                dto.getUserName(),
+                dto.getDate()
+        );
+        try {
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            helper.setTo(dto.getUserEmail());
+            helper.setSubject("User Account Deletion Request");
+            helper.setText(emailBody, true);
+            mailSender.send(message);
+        } catch (MessagingException e) {
+            throw new EmailSendingException(ERROR_MESSAGE + e);
         }
     }
 
@@ -78,6 +138,8 @@ public class EmailService {
                         + "<p>Installments: %d</p>"
                         + "<p>Proposal Purpose: %s</p>"
                         + "<p>Proposal Decision: %s</p>"
+                        + "<p>Best regards,</p>"
+                        + "<p>Credit System</p>"
                         + "<br>"
                         + "</div>",
                 dto.getUserName(),
@@ -93,7 +155,7 @@ public class EmailService {
             helper.setText(emailBody, true);
             mailSender.send(message);
         } catch (MessagingException e) {
-            log.error(ERROR_MESSAGE, e.getMessage());
+            throw new EmailSendingException(ERROR_MESSAGE + e);
         }
     }
 
@@ -108,6 +170,8 @@ public class EmailService {
                             + "<p>Here is your link to download your receipt:</p>"
                             + "<p><strong>%s</strong></p>"
                             + "<p><strong>This link expires in 1 hour!</strong></p>"
+                            + "<p>Best regards,</p>"
+                            + "<p>Credit System</p>"
                             + "<br>"
                             + "</div>",
                     dto.getUserName(),
@@ -117,7 +181,7 @@ public class EmailService {
             helper.setText(emailBody, true);
             mailSender.send(message);
         } catch (MessagingException e) {
-            log.error(ERROR_MESSAGE, e.getMessage());
+            throw new EmailSendingException(ERROR_MESSAGE + e);
         }
 
     }

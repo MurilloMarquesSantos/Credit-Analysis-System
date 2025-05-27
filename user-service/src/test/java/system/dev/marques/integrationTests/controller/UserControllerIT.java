@@ -177,7 +177,7 @@ class UserControllerIT extends AbstractIntegration {
         String token = generateToken(savedAdmin);
 
         spec = new RequestSpecBuilder()
-                .setBasePath("/home/create-admin")
+                .setBasePath("/home/admin/create-admin")
                 .setPort(8888)
                 .build();
 
@@ -204,7 +204,7 @@ class UserControllerIT extends AbstractIntegration {
         String token = generateToken(savedUser);
 
         spec = new RequestSpecBuilder()
-                .setBasePath("/home/create-admin")
+                .setBasePath("/home/admin/create-admin")
                 .setPort(8888)
                 .build();
 

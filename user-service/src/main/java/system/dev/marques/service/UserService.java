@@ -16,8 +16,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import system.dev.marques.domain.User;
 import system.dev.marques.domain.dto.rabbitmq.CreatedUserDto;
+import system.dev.marques.domain.dto.rabbitmq.DeleteUserDto;
 import system.dev.marques.domain.dto.rabbitmq.UserReceiptDto;
 import system.dev.marques.domain.dto.rabbitmq.ValidUserDto;
+import system.dev.marques.domain.dto.requests.DeleteForm;
 import system.dev.marques.domain.dto.requests.UserEnableRequest;
 import system.dev.marques.domain.dto.requests.UserRequest;
 import system.dev.marques.domain.dto.requests.UserRequestGoogle;
@@ -37,6 +39,7 @@ import java.security.Principal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -240,6 +243,18 @@ public class UserService {
         UserReceiptDto dto = mapper.toUserReceiptDto(user);
         dto.setProposalId(proposalId);
         producerService.sendUserReceipt(dto);
+        return "Request processed successfully, stay alert on your email box.";
+    }
+
+    public String submitDeleteRequest(DeleteForm form, Principal principal) {
+        Long userId = Long.valueOf(principal.getName());
+        User user = findUserById(userId);
+        List<User> admins = userRepository.findAllByRoleName("ADMIN");
+        List<String> adminEmails = admins.stream().map(User::getEmail).collect(Collectors.toList());
+        DeleteUserDto deleteUserDto = mapper.toDeleteUserDto(user);
+        deleteUserDto.setAdminEmails(adminEmails);
+        deleteUserDto.setReason(form.getReason());
+        producerService.sendDeleteDto(deleteUserDto);
         return "Request processed successfully, stay alert on your email box.";
     }
 

@@ -39,6 +39,7 @@ public class SecurityConfig {
                                            SocialLoginSuccessHandler successHandler) throws Exception {
         http.authorizeHttpRequests(auth -> auth
                         .requestMatchers("/home/create").permitAll()
+                        .requestMatchers("/home/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .formLogin(form -> form.loginPage("/login").permitAll())
                 .csrf(AbstractHttpConfigurer::disable)

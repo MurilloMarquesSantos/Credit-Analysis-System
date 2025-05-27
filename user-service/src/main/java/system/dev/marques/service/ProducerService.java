@@ -6,9 +6,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import system.dev.marques.domain.dto.proposal.ProposalUserInfo;
-import system.dev.marques.domain.dto.rabbitmq.CreatedUserDto;
-import system.dev.marques.domain.dto.rabbitmq.UserReceiptDto;
-import system.dev.marques.domain.dto.rabbitmq.ValidUserDto;
+import system.dev.marques.domain.dto.rabbitmq.*;
 
 @Service
 @RequiredArgsConstructor
@@ -31,7 +29,6 @@ public class ProducerService {
     }
 
     public void sendCreated(CreatedUserDto dto) {
-        log.info(dto.toString());
         rabbitTemplate.convertAndSend(notificationExchange, "notification.user.created", dto);
     }
 
@@ -43,4 +40,11 @@ public class ProducerService {
         rabbitTemplate.convertAndSend(documentationExchange, "documentation.user", dto);
     }
 
+    public void sendDeleteDto(DeleteUserDto dto) {
+        rabbitTemplate.convertAndSend(notificationExchange, "notification.user.delete", dto);
+    }
+
+    public void sendUserDeleteConfirmation(DeleteUserConfirmationDto dto){
+        rabbitTemplate.convertAndSend(notificationExchange, "notification.user.confirmation", dto);
+    }
 }

@@ -7,8 +7,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import system.dev.marques.domain.dto.requests.DeleteForm;
 import system.dev.marques.domain.dto.requests.UserRequest;
 import system.dev.marques.domain.dto.responses.ProposalHistoryResponse;
 import system.dev.marques.domain.dto.responses.UserResponse;
@@ -29,8 +29,7 @@ public class UserController {
         return new ResponseEntity<>(userService.saveUser(userRequest, "formlogin"), HttpStatus.CREATED);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PostMapping("/create-admin")
+    @PostMapping("/admin/create-admin")
     public ResponseEntity<UserResponse> createAdmin(@RequestBody @Valid UserRequest userRequest) throws BadRequestException {
         return new ResponseEntity<>(userService.saveAdmin(userRequest), HttpStatus.CREATED);
     }
@@ -45,6 +44,11 @@ public class UserController {
     @GetMapping("/user/history/{id}")
     public String getUserProposalReceipt(@PathVariable long id, Principal principal) {
         return userService.sendUserReceipt(id, principal);
+    }
+
+    @PostMapping("/user/delete")
+    public ResponseEntity<String> userDeleteForm(@RequestBody @Valid DeleteForm form, Principal principal) {
+        return ResponseEntity.ok(userService.submitDeleteRequest(form, principal));
     }
 
 }

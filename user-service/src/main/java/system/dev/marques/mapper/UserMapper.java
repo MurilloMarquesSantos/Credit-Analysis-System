@@ -6,6 +6,8 @@ import org.mapstruct.MappingTarget;
 import system.dev.marques.domain.User;
 import system.dev.marques.domain.dto.proposal.ProposalRequest;
 import system.dev.marques.domain.dto.proposal.ProposalUserInfo;
+import system.dev.marques.domain.dto.rabbitmq.DeleteUserConfirmationDto;
+import system.dev.marques.domain.dto.rabbitmq.DeleteUserDto;
 import system.dev.marques.domain.dto.rabbitmq.UserReceiptDto;
 import system.dev.marques.domain.dto.requests.UserEnableRequest;
 import system.dev.marques.domain.dto.requests.UserRequest;
@@ -19,8 +21,6 @@ public interface UserMapper {
     User toUser(UserRequest userRequest);
 
     User toUser(UserResponse userResponse);
-
-    UserRequest toUserRequest(User user);
 
     UserResponse toUserResponse(User user);
 
@@ -57,4 +57,12 @@ public interface UserMapper {
     @Mapping(target = "userName", source = "user.name")
     @Mapping(target = "userEmail", source = "user.email")
     UserReceiptDto toUserReceiptDto(User user);
+
+    @Mapping(target = "userId", source = "user.id")
+    @Mapping(target = "userEmail", source = "user.email")
+    DeleteUserDto toDeleteUserDto(User user);
+
+    @Mapping(target = "userName", source = "user.name")
+    @Mapping(target = "userEmail", source = "user.email")
+    DeleteUserConfirmationDto toDeleUserConfirmationDto(User user);
 }

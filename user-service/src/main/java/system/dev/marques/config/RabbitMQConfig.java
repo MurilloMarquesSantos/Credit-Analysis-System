@@ -23,6 +23,12 @@ public class RabbitMQConfig {
     @Value("${spring.rabbitmq.queue.notification-validation}")
     private String notificationValidationQueue;
 
+    @Value("${spring.rabbitmq.queue.notification-delete-user}")
+    private String notificationDeleteQueue;
+
+    @Value("${spring.rabbitmq.queue.notification-delete-confirmation}")
+    private String notificationConfirmationQueue;
+
     @Value("${spring.rabbitmq.exchange.notification}")
     private String notificationExchange;
 
@@ -46,6 +52,12 @@ public class RabbitMQConfig {
     }
 
     @Bean
+    public Queue userDeleteQueue(){return QueueBuilder.durable(notificationDeleteQueue).build();}
+
+    @Bean
+    public Queue userConfirmationQueue(){return QueueBuilder.durable(notificationConfirmationQueue).build();}
+
+    @Bean
     public Queue proposalQueue() {
         return QueueBuilder.durable(proposalQueueName).build();
     }
@@ -59,7 +71,6 @@ public class RabbitMQConfig {
     public DirectExchange documentationExchange() {
         return new DirectExchange(documentationExchangeName);
     }
-
 
     @Bean
     public TopicExchange notificationTopicExchange() {
@@ -101,6 +112,22 @@ public class RabbitMQConfig {
                 .bind(userCreatedQueue())
                 .to(notificationTopicExchange())
                 .with("notification.user.created");
+    }
+
+    @Bean
+    public Binding bindingNotificationDelete() {
+        return BindingBuilder
+                .bind(userDeleteQueue())
+                .to(notificationTopicExchange())
+                .with("notification.user.delete");
+    }
+
+    @Bean
+    public Binding bindingNotificationConfirmation() {
+        return BindingBuilder
+                .bind(userConfirmationQueue())
+                .to(notificationTopicExchange())
+                .with("notification.user.confirmation");
     }
 
     @Bean

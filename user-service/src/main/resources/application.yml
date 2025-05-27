@@ -42,6 +42,8 @@ spring:
       proposal: queue.proposal
       notification-validation: queue.notification.user.validation
       notification-created: queue.notification.user.created
+      notification-delete-user: queue.notification.user.delete
+      notification-delete-confirmation: queue.notification.user.confirmation
       documentation: queue.user.receipt
     exchange:
       notification: notification.exchange
