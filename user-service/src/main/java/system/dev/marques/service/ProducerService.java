@@ -40,6 +40,10 @@ public class ProducerService {
         rabbitTemplate.convertAndSend(documentationExchange, "documentation.user", dto);
     }
 
+    public void sendDocumentDeletion(Long id) {
+        rabbitTemplate.convertAndSend(documentationExchange, "documentation.deletion", id);
+    }
+
     public void sendDeleteDto(DeleteUserDto dto) {
         rabbitTemplate.convertAndSend(notificationExchange, "notification.user.delete", dto);
     }

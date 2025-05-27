@@ -17,6 +17,9 @@ public class RabbitMQConfig {
     @Value("${spring.rabbitmq.queue.proposal}")
     private String proposalQueueName;
 
+    @Value("${spring.rabbitmq.queue.documentation.deletion}")
+    private String documentDeletionQueueName;
+
     @Value("${spring.rabbitmq.queue.notification-created}")
     private String notificationCreateQueue;
 
@@ -35,7 +38,7 @@ public class RabbitMQConfig {
     @Value("${spring.rabbitmq.exchange.proposal}")
     private String proposalExchangeName;
 
-    @Value("${spring.rabbitmq.queue.documentation}")
+    @Value("${spring.rabbitmq.queue.documentation.receipt}")
     private String userReceiptQueueName;
 
     @Value("${spring.rabbitmq.exchange.documentation}")
@@ -52,10 +55,14 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    public Queue userDeleteQueue(){return QueueBuilder.durable(notificationDeleteQueue).build();}
+    public Queue userDeleteQueue() {
+        return QueueBuilder.durable(notificationDeleteQueue).build();
+    }
 
     @Bean
-    public Queue userConfirmationQueue(){return QueueBuilder.durable(notificationConfirmationQueue).build();}
+    public Queue userConfirmationQueue() {
+        return QueueBuilder.durable(notificationConfirmationQueue).build();
+    }
 
     @Bean
     public Queue proposalQueue() {
@@ -67,9 +74,15 @@ public class RabbitMQConfig {
         return QueueBuilder.durable(userReceiptQueueName).build();
     }
 
+
     @Bean
-    public DirectExchange documentationExchange() {
-        return new DirectExchange(documentationExchangeName);
+    public Queue documentationDeletionQueue() {
+        return QueueBuilder.durable(documentDeletionQueueName).build();
+    }
+
+    @Bean
+    public TopicExchange documentationExchange() {
+        return new TopicExchange(documentationExchangeName);
     }
 
     @Bean
@@ -88,6 +101,14 @@ public class RabbitMQConfig {
                 .bind(documentationQueue())
                 .to(documentationExchange())
                 .with("documentation.user");
+    }
+
+    @Bean
+    public Binding documentationDeleteBinding() {
+        return BindingBuilder
+                .bind(documentationQueue())
+                .to(documentationExchange())
+                .with("documentation.deletion");
     }
 
     @Bean

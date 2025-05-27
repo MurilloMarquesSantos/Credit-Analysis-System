@@ -5,9 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.model.HeadObjectRequest;
-import software.amazon.awssdk.services.s3.model.PutObjectRequest;
-import software.amazon.awssdk.services.s3.model.S3Exception;
+import software.amazon.awssdk.services.s3.model.*;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
 import system.dev.marques.dto.ApprovedProposalDto;
@@ -98,6 +96,26 @@ public class S3Service {
         proposalNotificationDto.setUrl(url);
 
         producerService.sendUserReceipt(proposalNotificationDto);
+    }
+
+    public void deleteUserFolder(Long userId) {
+        String prefix = "receipts/user-" + userId + "/";
+
+        ListObjectsV2Response listResponse = s3Client.listObjectsV2(
+                ListObjectsV2Request.builder()
+                        .bucket(bucketName)
+                        .prefix(prefix)
+                        .build()
+        );
+
+        if (!listResponse.contents().isEmpty()) {
+            s3Client.deleteObjects(DeleteObjectsRequest.builder()
+                    .bucket(bucketName)
+                    .delete(d -> d.objects(listResponse.contents().stream()
+                            .map(s3Object -> ObjectIdentifier.builder().key(s3Object.key()).build())
+                            .toList()))
+                    .build());
+        }
     }
 
 }

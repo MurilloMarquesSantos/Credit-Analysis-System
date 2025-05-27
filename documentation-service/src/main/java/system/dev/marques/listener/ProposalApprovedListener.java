@@ -22,4 +22,9 @@ public class ProposalApprovedListener {
     public void listenDocumentUserQueue(UserReceiptDto dto) {
         s3Service.getProposalUrl(dto);
     }
+
+    @RabbitListener(queues = "queue.user.deletion")
+    public void listenDocumentUserQueue(Long id) {
+        s3Service.deleteUserFolder(id);
+    }
 }

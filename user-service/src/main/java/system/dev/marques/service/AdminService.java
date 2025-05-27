@@ -35,6 +35,8 @@ public class AdminService {
         userRepository.deleteById(userId);
 
         userOpt.ifPresent(this::notifyUserDeletion);
+
+        userOpt.ifPresent(this::notifyDocumentDeletion);
     }
 
     private void notifyUserDeletion(User user) {
@@ -43,6 +45,10 @@ public class AdminService {
         DeleteUserConfirmationDto dto = mapper.toDeleUserConfirmationDto(user);
         dto.setDate(date);
         producerService.sendUserDeleteConfirmation(dto);
+    }
+
+    private void notifyDocumentDeletion(User user) {
+        producerService.sendDocumentDeletion(user.getId());
     }
 
 }
