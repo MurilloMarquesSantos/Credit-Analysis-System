@@ -104,6 +104,7 @@ class UserControllerIT extends AbstractIntegration {
                                             {
                                               "content": [
                                                 {
+                                                  "proposalId": 1,
                                                   "cpf": "123456789",
                                                   "requestedAmount": 5000.0,
                                                   "status": "APPROVED",
@@ -262,6 +263,28 @@ class UserControllerIT extends AbstractIntegration {
                 .get()
                 .then()
                 .statusCode(403);
+    }
+
+    @Test
+    void getUserProposalReceipt_SendReceipt_WhenSuccessful(){
+        String token = generateToken(savedAdmin);
+
+        spec = new RequestSpecBuilder()
+                .setBasePath("/home/user/history/{id}")
+                .setPort(8888)
+                .build();
+
+        String getResponse = RestAssured.given()
+                .spec(spec)
+                .header("Authorization", "Bearer " + token)
+                .pathParam("id", 1L)
+                .get()
+                .then()
+                .statusCode(200)
+                .extract()
+                .body().asString();
+
+        assertThat(getResponse).isEqualTo("Request processed successfully, stay alert on your email box.");
     }
 
 }

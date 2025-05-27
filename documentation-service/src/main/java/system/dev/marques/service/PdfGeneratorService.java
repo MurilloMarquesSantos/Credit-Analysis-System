@@ -6,11 +6,11 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 import system.dev.marques.dto.ApprovedProposalDto;
+import system.dev.marques.exception.PdfConverterException;
 
 import java.io.ByteArrayOutputStream;
 
 
-//todo make a dedicate exception
 @Component
 @RequiredArgsConstructor
 public class PdfGeneratorService {
@@ -31,7 +31,7 @@ public class PdfGeneratorService {
             renderer.createPDF(outputStream);
             return outputStream.toByteArray();
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new PdfConverterException("Error while trying to generate PDF: " + e.getMessage());
         }
     }
 

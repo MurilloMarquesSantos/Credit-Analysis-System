@@ -42,9 +42,11 @@ spring:
       proposal: queue.proposal
       notification-validation: queue.notification.user.validation
       notification-created: queue.notification.user.created
+      documentation: queue.user.receipt
     exchange:
       notification: notification.exchange
       proposal: proposal.exchange
+      documentation: documentation.exchange
 resilience4j:
   circuitbreaker:
     instances:

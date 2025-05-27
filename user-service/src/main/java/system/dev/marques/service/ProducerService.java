@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import system.dev.marques.domain.dto.proposal.ProposalUserInfo;
 import system.dev.marques.domain.dto.rabbitmq.CreatedUserDto;
+import system.dev.marques.domain.dto.rabbitmq.UserReceiptDto;
 import system.dev.marques.domain.dto.rabbitmq.ValidUserDto;
 
 @Service
@@ -20,19 +21,26 @@ public class ProducerService {
     @Value("${spring.rabbitmq.exchange.proposal}")
     private String proposalExchange;
 
+    @Value("${spring.rabbitmq.exchange.documentation}")
+    private String documentationExchange;
+
     private final RabbitTemplate rabbitTemplate;
 
-    public void sendValidation(ValidUserDto dto){
+    public void sendValidation(ValidUserDto dto) {
         rabbitTemplate.convertAndSend(notificationExchange, "notification.user.validation", dto);
     }
 
-    public void sendCreated(CreatedUserDto dto){
+    public void sendCreated(CreatedUserDto dto) {
         log.info(dto.toString());
         rabbitTemplate.convertAndSend(notificationExchange, "notification.user.created", dto);
     }
 
-    public void sendProposal(ProposalUserInfo userInfo){
+    public void sendProposal(ProposalUserInfo userInfo) {
         rabbitTemplate.convertAndSend(proposalExchange, "proposal.queue", userInfo);
+    }
+
+    public void sendUserReceipt(UserReceiptDto dto) {
+        rabbitTemplate.convertAndSend(documentationExchange, "documentation.user", dto);
     }
 
 }

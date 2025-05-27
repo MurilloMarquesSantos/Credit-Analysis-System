@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import system.dev.marques.domain.User;
 import system.dev.marques.domain.dto.rabbitmq.CreatedUserDto;
+import system.dev.marques.domain.dto.rabbitmq.UserReceiptDto;
 import system.dev.marques.domain.dto.rabbitmq.ValidUserDto;
 import system.dev.marques.domain.dto.requests.UserEnableRequest;
 import system.dev.marques.domain.dto.requests.UserRequest;
@@ -42,6 +43,7 @@ import java.util.Optional;
 @Log4j2
 public class UserService {
 
+    private final UserRepository userRepository;
     @Value("${google.default.password}")
     private String googlePassword;
 
@@ -229,6 +231,16 @@ public class UserService {
         List<ProposalHistoryResponse> paginated = userHistory.subList(start, end);
 
         return new PageImpl<>(paginated, pageable, userHistory.size());
+    }
+
+
+    public String sendUserReceipt(long proposalId, Principal principal) {
+        Long userId = Long.valueOf(principal.getName());
+        User user = findUserById(userId);
+        UserReceiptDto dto = mapper.toUserReceiptDto(user);
+        dto.setProposalId(proposalId);
+        producerService.sendUserReceipt(dto);
+        return "Request processed successfully, stay alert on your email box.";
     }
 
 }

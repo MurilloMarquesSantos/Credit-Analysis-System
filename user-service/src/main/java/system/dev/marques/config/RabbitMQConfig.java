@@ -29,6 +29,11 @@ public class RabbitMQConfig {
     @Value("${spring.rabbitmq.exchange.proposal}")
     private String proposalExchangeName;
 
+    @Value("${spring.rabbitmq.queue.documentation}")
+    private String userReceiptQueueName;
+
+    @Value("${spring.rabbitmq.exchange.documentation}")
+    private String documentationExchangeName;
 
     @Bean
     public Queue userValidationQueue() {
@@ -45,6 +50,16 @@ public class RabbitMQConfig {
         return QueueBuilder.durable(proposalQueueName).build();
     }
 
+    @Bean
+    public Queue documentationQueue() {
+        return QueueBuilder.durable(userReceiptQueueName).build();
+    }
+
+    @Bean
+    public DirectExchange documentationExchange() {
+        return new DirectExchange(documentationExchangeName);
+    }
+
 
     @Bean
     public TopicExchange notificationTopicExchange() {
@@ -57,7 +72,15 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    public Binding bindingProposal(){
+    public Binding documentationBinding() {
+        return BindingBuilder
+                .bind(documentationQueue())
+                .to(documentationExchange())
+                .with("documentation.user");
+    }
+
+    @Bean
+    public Binding bindingProposal() {
         return BindingBuilder
                 .bind(proposalQueue())
                 .to(proposalExchange())

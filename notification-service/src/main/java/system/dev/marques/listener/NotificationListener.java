@@ -37,4 +37,9 @@ public class NotificationListener {
     public void listenProposalReceiptQueue(ProposalNotificationDto dto) {
         emailService.sendProposalReceiptUrl(dto);
     }
+
+    @RabbitListener(queues = "queue.notification.user.receipt")
+    public void listenUserReceiptQueue(ProposalNotificationDto dto) {
+        emailService.sendProposalReceiptUrl(dto);
+    }
 }

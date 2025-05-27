@@ -1,14 +1,72 @@
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Proposal Receipt</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 30px;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #343a40;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            color: #343a40;
+        }
+
+        .receipt-info {
+            background-color: #ffffff;
+            padding: 20px;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .receipt-info p {
+            margin: 8px 0;
+            font-size: 16px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 13px;
+            color: #6c757d;
+        }
+    </style>
+</head>
 <body>
-<h1>Approved Proposal Receipt</h1>
-<p>Proposal ID: <span th:text="${dto.proposalId}"/></p>
-<p>User: <span th:text="${dto.userName}"/></p>
-<p>Cpf: <span th:text="${dto.cpf}"/></p>
-<p>Income: <span th:text="${dto.userIncome}"/></p>
-<p>Amount: $ <span th:text="${dto.requestedAmount}"/></p>
-<p>Installments: <span th:text="${dto.installments}"/></p>
-<p>Installments Value: $ <span th:text="${#numbers.formatDecimal(dto.installmentsValue, 0, 2)}"/></p>
-<p>Purpose: <span th:text="${dto.purpose}"/></p>
-<p>Requested at: <span th:text="${dto.formattedCreatedAt}"/></p>
+<div class="header">
+    <h1>Approved Proposal Receipt</h1>
+    <p><strong>Credit Analysis Platform</strong></p>
+</div>
+
+<div class="receipt-info">
+    <p><strong>Proposal ID:</strong> <span th:text="${dto.proposalId}"/></p>
+    <p><strong>User Name:</strong> <span th:text="${dto.userName}"/></p>
+    <p><strong>CPF:</strong> <span th:text="${dto.cpf}"/></p>
+    <p><strong>Monthly Income:</strong> $ <span th:text="${dto.userIncome}"/></p>
+    <p><strong>Requested Amount:</strong> $ <span th:text="${dto.requestedAmount}"/></p>
+    <p><strong>Installments:</strong> <span th:text="${dto.installments}"/></p>
+    <p><strong>Installment Value:</strong> $ <span th:text="${#numbers.formatDecimal(dto.installmentsValue, 0, 2)}"/></p>
+    <p><strong>Purpose:</strong> <span th:text="${dto.purpose}"/></p>
+    <p><strong>Requested At:</strong> <span th:text="${dto.formattedCreatedAt}"/></p>
+</div>
+
+<div class="footer">
+    <p>This document was generated automatically. Please keep this receipt for your records.</p>
+</div>
 </body>
 </html>

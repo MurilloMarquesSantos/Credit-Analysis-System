@@ -14,6 +14,8 @@ import java.time.LocalDateTime;
 @Builder
 public class ProposalHistoryResponse {
 
+    private long proposalId;
+
     private String cpf;
 
     private Double requestedAmount;

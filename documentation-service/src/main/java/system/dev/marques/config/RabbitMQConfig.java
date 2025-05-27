@@ -13,6 +13,9 @@ public class RabbitMQConfig {
     @Value("${spring.rabbitmq.queue.notification.proposal-receipt}")
     private String notificationQueueName;
 
+    @Value("${spring.rabbitmq.queue.notification.user-receipt}")
+    private String userReceiptQueueName;
+
     @Value("${spring.rabbitmq.exchange.notification}")
     private String notificationExchangeName;
 
@@ -22,8 +25,13 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    public DirectExchange notificationExchange() {
-        return new DirectExchange(notificationExchangeName);
+    public Queue userReceiptQueue() {
+        return QueueBuilder.durable(userReceiptQueueName).build();
+    }
+
+    @Bean
+    public TopicExchange notificationExchange() {
+        return new TopicExchange(notificationExchangeName);
     }
 
     @Bean
@@ -32,6 +40,14 @@ public class RabbitMQConfig {
                 .bind(notificationQueue())
                 .to(notificationExchange())
                 .with("notification.queue");
+    }
+
+    @Bean
+    public Binding userReceiptBinding() {
+        return BindingBuilder
+                .bind(userReceiptQueue())
+                .to(notificationExchange())
+                .with("notification.user");
     }
 
     @Bean

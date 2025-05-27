@@ -42,4 +42,9 @@ public class UserController {
         return ResponseEntity.ok(userService.fetchHistory(userId, pageable));
     }
 
+    @GetMapping("/user/history/{id}")
+    public String getUserProposalReceipt(@PathVariable long id, Principal principal) {
+        return userService.sendUserReceipt(id, principal);
+    }
+
 }

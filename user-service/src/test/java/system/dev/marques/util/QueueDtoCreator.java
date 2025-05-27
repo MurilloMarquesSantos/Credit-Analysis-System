@@ -2,6 +2,7 @@ package system.dev.marques.util;
 
 import system.dev.marques.domain.dto.proposal.ProposalUserInfo;
 import system.dev.marques.domain.dto.rabbitmq.CreatedUserDto;
+import system.dev.marques.domain.dto.rabbitmq.UserReceiptDto;
 import system.dev.marques.domain.dto.rabbitmq.ValidUserDto;
 
 public class QueueDtoCreator {
@@ -33,6 +34,15 @@ public class QueueDtoCreator {
                 .email("murillo@gmail.com")
                 .name("Murillo Marques")
                 .url("http://murillo.com")
+                .build();
+    }
+
+    public static UserReceiptDto createUserReceiptDto() {
+        return UserReceiptDto.builder()
+                .proposalId(1L)
+                .userEmail("murillo@gmail.com")
+                .userName("Murillo Marques")
+                .userId(1L)
                 .build();
     }
 }

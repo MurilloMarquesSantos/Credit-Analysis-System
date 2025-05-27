@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import system.dev.marques.domain.dto.proposal.ProposalUserInfo;
 import system.dev.marques.domain.dto.rabbitmq.CreatedUserDto;
+import system.dev.marques.domain.dto.rabbitmq.UserReceiptDto;
 import system.dev.marques.domain.dto.rabbitmq.ValidUserDto;
 import system.dev.marques.integrationTests.AbstractIntegration;
 import system.dev.marques.service.ProducerService;
@@ -36,6 +37,10 @@ class ProducerServiceIT extends AbstractIntegration {
     @Qualifier("userCreatedQueue")
     private Queue userCreatedQueue;
 
+    @Autowired
+    @Qualifier("documentationQueue")
+    private Queue userReceiptQueue;
+
     @Test
     void shouldSendProposalToCorrectQueue() {
 
@@ -57,7 +62,7 @@ class ProducerServiceIT extends AbstractIntegration {
     }
 
     @Test
-    void shouldSendValidationToCorrectQueue(){
+    void shouldSendValidationToCorrectQueue() {
         ValidUserDto dto = createValidUserDto();
 
         producerService.sendValidation(dto);
@@ -72,7 +77,7 @@ class ProducerServiceIT extends AbstractIntegration {
     }
 
     @Test
-    void shouldSendCreatedToCorrectQueue(){
+    void shouldSendCreatedToCorrectQueue() {
         CreatedUserDto dto = createCreatedUserDto();
 
         producerService.sendCreated(dto);
@@ -84,5 +89,23 @@ class ProducerServiceIT extends AbstractIntegration {
         CreatedUserDto received = (CreatedUserDto) message;
 
         assertThat(received.getEmail()).isEqualTo(dto.getEmail());
+    }
+
+    @Test
+    void shouldSendUserReceiptToCorrectQueue() {
+        UserReceiptDto dto = createUserReceiptDto();
+
+        producerService.sendUserReceipt(dto);
+
+        Object message = rabbitTemplate.receiveAndConvert(userReceiptQueue.getName(), 5000);
+
+        assertThat(message).isNotNull().isInstanceOf(UserReceiptDto.class);
+
+        UserReceiptDto received = (UserReceiptDto) message;
+
+        assertThat(received.getProposalId()).isEqualTo(dto.getProposalId());
+
+        assertThat(received).isEqualTo(dto);
+
     }
 }

@@ -5,11 +5,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.HeadObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.services.s3.model.S3Exception;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
 import system.dev.marques.dto.ApprovedProposalDto;
 import system.dev.marques.dto.ProposalNotificationDto;
+import system.dev.marques.dto.UserReceiptDto;
+import system.dev.marques.exception.NoPdfFoundException;
 import system.dev.marques.mapper.ProposalMapper;
 
 import java.net.URL;
@@ -66,6 +70,34 @@ public class S3Service {
 
         URL url = s3Presigner.presignGetObject(presignRequest).url();
         return url.toString();
+    }
+
+    public void getProposalUrl(UserReceiptDto dto) {
+        String key = "receipts/user-" + dto.getUserId() + "/proposal-" + dto.getProposalId();
+
+        HeadObjectRequest request = HeadObjectRequest.builder()
+                .bucket(bucketName)
+                .key(key)
+                .build();
+
+        try {
+            s3Client.headObject(request);
+        } catch (S3Exception e) {
+            throw new NoPdfFoundException("Receipt not found for the given proposal. " + e.getMessage());
+        }
+
+        GetObjectPresignRequest presignRequest = GetObjectPresignRequest.builder()
+                .signatureDuration(Duration.ofHours(1))
+                .getObjectRequest(b -> b.bucket(bucketName).key(key))
+                .build();
+
+        String url = s3Presigner.presignGetObject(presignRequest).url().toString();
+
+        ProposalNotificationDto proposalNotificationDto = mapper.toProposalNotificationDto(dto);
+
+        proposalNotificationDto.setUrl(url);
+
+        producerService.sendUserReceipt(proposalNotificationDto);
     }
 
 }

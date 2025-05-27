@@ -6,6 +6,7 @@ import org.mapstruct.MappingTarget;
 import system.dev.marques.domain.User;
 import system.dev.marques.domain.dto.proposal.ProposalRequest;
 import system.dev.marques.domain.dto.proposal.ProposalUserInfo;
+import system.dev.marques.domain.dto.rabbitmq.UserReceiptDto;
 import system.dev.marques.domain.dto.requests.UserEnableRequest;
 import system.dev.marques.domain.dto.requests.UserRequest;
 import system.dev.marques.domain.dto.requests.UserRequestGoogle;
@@ -51,4 +52,9 @@ public interface UserMapper {
     @Mapping(target = "installments", source = "request.installments")
     @Mapping(target = "purpose", source = "request.purpose")
     ProposalUserInfo toProposalUserInfo(User user, ProposalRequest request);
+
+    @Mapping(target = "userId", source = "user.id")
+    @Mapping(target = "userName", source = "user.name")
+    @Mapping(target = "userEmail", source = "user.email")
+    UserReceiptDto toUserReceiptDto(User user);
 }

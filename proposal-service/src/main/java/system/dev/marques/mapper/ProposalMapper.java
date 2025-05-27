@@ -18,6 +18,7 @@ public interface ProposalMapper {
     @Mapping(target = "installments", source = "proposal.installments")
     ProposalCreditDto toProposalCreditDto(Proposal proposal);
 
+    @Mapping(target = "proposalId", source = "proposal.id")
     ProposalHistoryResponse toProposalHistoryResponse(Proposal proposal);
 
     ProposalStatusEmailDto toProposalStatusEmailDto(Proposal proposal);
