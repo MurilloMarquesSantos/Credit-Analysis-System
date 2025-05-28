@@ -44,7 +44,7 @@ class TokenRepositoryIT extends AbstractIntegration {
 
 
     @Test
-    void findByToken_ReturnsTokenOpt_WhenSuccessful() {
+    void findByToken_ReturnsTokenOptional_WhenSuccessful() {
 
         enableUserToken = createUserToken();
 
@@ -59,7 +59,7 @@ class TokenRepositoryIT extends AbstractIntegration {
     }
 
     @Test
-    void findByToken_ReturnsEmptyTokenOpt_WhenTokenNotFound() {
+    void findByToken_ReturnsEmptyTokenOptional_WhenTokenNotFound() {
 
         enableUserToken = createUserToken();
 
