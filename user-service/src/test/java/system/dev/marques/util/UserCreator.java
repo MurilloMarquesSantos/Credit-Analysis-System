@@ -53,6 +53,15 @@ public class UserCreator {
                 .build();
     }
 
+    public UserRequest createInvalidCPFUserRequest() {
+        return UserRequest.builder().email("murillomars@gmail.com")
+                .name("Murillo Marques")
+                .cpf("123")
+                .password("Murillo@1212")
+                .phoneNumber("11844786423")
+                .build();
+    }
+
     public User createInvalidUser() {
         return User.builder()
                 .cpf("01234567890")

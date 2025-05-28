@@ -22,6 +22,7 @@ import java.time.Instant;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static system.dev.marques.util.RequestCreator.createInvalidProposalRequest;
 import static system.dev.marques.util.RequestCreator.createProposalRequest;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT, properties = {"server.port=8885"})
@@ -96,12 +97,33 @@ class ProposalControllerIT extends AbstractIntegration {
                 .when()
                 .post()
                 .then()
+                .statusCode(200)
                 .extract()
                 .body().asString();
 
         assertThat(response).isNotBlank().isEqualTo(
                 "Proposal sent for review. Please monitor your email inbox for further updates.");
 
+    }
+
+    @Test
+    void proposal_ReturnsBadRequest400When_RequestHasNullFields() {
+        String token = generateToken(savedUser);
+
+        RequestSpecification spec = new RequestSpecBuilder()
+                .setBasePath("/home/send-proposal")
+                .setPort(8885)
+                .build();
+
+        RestAssured.given()
+                .spec(spec)
+                .contentType("application/json")
+                .header("Authorization", "Bearer " + token)
+                .body(createInvalidProposalRequest())
+                .when()
+                .post()
+                .then()
+                .statusCode(400);
     }
 
     @Test

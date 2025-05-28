@@ -39,6 +39,8 @@ import java.util.stream.Collectors;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static system.dev.marques.util.FormCreator.createDeleteForm;
+import static system.dev.marques.util.FormCreator.createInvalidForm;
 
 @ActiveProfiles("test")
 @Import(WebClientTestConfig.class)
@@ -173,6 +175,46 @@ class UserControllerIT extends AbstractIntegration {
     }
 
     @Test
+    void create_ReturnsConflict409_WhenPhoneNumberIsAlreadyInUse() {
+        spec = new RequestSpecBuilder()
+                .setBasePath("/home/create")
+                .setPort(8888)
+                .build();
+
+        userRequest.setPhoneNumber("11885786421");
+
+        RestAssured.given()
+                .spec(spec)
+                .contentType("application/json")
+                .body(userRequest)
+                .when()
+                .post()
+                .then()
+                .statusCode(409);
+    }
+
+    @Test
+    void create_ReturnsBadRequest400_WhenCPFDoesNotMatchesRequirements() {
+
+        UserRequest invalidCPFUserRequest = userCreator.createInvalidCPFUserRequest();
+        spec = new RequestSpecBuilder()
+                .setBasePath("/home/create")
+                .setPort(8888)
+                .build();
+
+        RestAssured.given()
+                .spec(spec)
+                .contentType("application/json")
+                .body(invalidCPFUserRequest)
+                .when()
+                .post()
+                .then()
+                .log().all()
+                .statusCode(400)
+                .log().all();
+    }
+
+    @Test
     void createAdmin_ReturnsUserAdmin_WhenSuccessful() throws JsonProcessingException {
         String token = generateToken(savedAdmin);
 
@@ -266,7 +308,7 @@ class UserControllerIT extends AbstractIntegration {
     }
 
     @Test
-    void getUserProposalReceipt_SendReceipt_WhenSuccessful(){
+    void getUserProposalReceipt_SendReceipt_WhenSuccessful() {
         String token = generateToken(savedAdmin);
 
         spec = new RequestSpecBuilder()
@@ -285,6 +327,59 @@ class UserControllerIT extends AbstractIntegration {
                 .body().asString();
 
         assertThat(getResponse).isEqualTo("Request processed successfully, stay alert on your email box.");
+    }
+
+    @Test
+    void userDeleteForm_ReturnsMessage_WhenSuccessful() {
+
+        String token = generateToken(savedUser);
+
+        spec = new RequestSpecBuilder()
+                .setBasePath("/home/user/delete")
+                .setPort(8888)
+                .build();
+
+        String postResponse = RestAssured.given()
+                .spec(spec)
+                .contentType("application/json")
+                .header("Authorization", "Bearer " + token)
+                .body(createDeleteForm())
+                .when()
+                .post()
+                .then()
+                .log().all()
+                .statusCode(200)
+                .log().all()
+                .extract()
+                .body().asString();
+
+
+        assertThat(postResponse)
+                .isNotBlank()
+                .isEqualTo("Request processed successfully, stay alert on your email box.");
+
+    }
+
+    @Test
+    void userDeleteForm_ReturnsBadRequest400_WhenFormIsInvalid() {
+
+        String token = generateToken(savedUser);
+
+        spec = new RequestSpecBuilder()
+                .setBasePath("/home/user/delete")
+                .setPort(8888)
+                .build();
+
+        RestAssured.given()
+                .spec(spec)
+                .contentType("application/json")
+                .header("Authorization", "Bearer " + token)
+                .body(createInvalidForm())
+                .when()
+                .post()
+                .then()
+                .statusCode(400);
+
     }
 
 }

@@ -102,6 +102,7 @@ class LoginControllerIT extends AbstractIntegration {
                 .post("/login");
 
         assertThat(response.getStatusCode()).isEqualTo(302);
+
         assertThat(response.getHeader("Location")).contains("/login?error");
 
     }

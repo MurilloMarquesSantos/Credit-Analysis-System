@@ -10,4 +10,8 @@ public class RequestCreator {
                 .installments(60)
                 .purpose("Buy a car").build();
     }
+
+    public static ProposalRequest createInvalidProposalRequest() {
+        return ProposalRequest.builder().build();
+    }
 }

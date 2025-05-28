@@ -25,7 +25,7 @@ public class ProposalService {
 
     private final UserRepository userRepository;
 
-    public void propose(ProposalRequest request, Principal principal) throws BadRequestException {
+    public String propose(ProposalRequest request, Principal principal) throws BadRequestException {
         Long userId = Long.valueOf(principal.getName());
         User user = userService.findUserById(userId);
 
@@ -44,6 +44,8 @@ public class ProposalService {
 
         user.setLastProposalAt(LocalDateTime.now());
         userRepository.save(user);
+
+        return "Proposal sent for review. Please monitor your email inbox for further updates.";
 
     }
 
