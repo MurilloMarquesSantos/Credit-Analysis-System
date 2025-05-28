@@ -31,6 +31,8 @@ public class S3Service {
 
     private final ProposalMapper mapper;
 
+    private static final String FOLDER_PREFIX = "receipts/user-";
+
     @Value("${spring.cloud.aws.s3.bucket}")
     private String bucketName;
 
@@ -38,7 +40,7 @@ public class S3Service {
 
         byte[] pdf = pdfGenerator.generate(dto);
 
-        String key = "receipts/user-" + dto.getUserId() + "/proposal-" + dto.getProposalId();
+        String key = FOLDER_PREFIX + dto.getUserId() + "/proposal-" + dto.getProposalId();
 
         String url = uploadAndGetUrl(pdf, key);
 
@@ -71,7 +73,7 @@ public class S3Service {
     }
 
     public void getProposalUrl(UserReceiptDto dto) {
-        String key = "receipts/user-" + dto.getUserId() + "/proposal-" + dto.getProposalId();
+        String key = FOLDER_PREFIX + dto.getUserId() + "/proposal-" + dto.getProposalId();
 
         HeadObjectRequest request = HeadObjectRequest.builder()
                 .bucket(bucketName)
@@ -99,7 +101,7 @@ public class S3Service {
     }
 
     public void deleteUserFolder(Long userId) {
-        String prefix = "receipts/user-" + userId + "/";
+        String prefix = FOLDER_PREFIX + userId + "/";
 
         ListObjectsV2Response listResponse = s3Client.listObjectsV2(
                 ListObjectsV2Request.builder()
