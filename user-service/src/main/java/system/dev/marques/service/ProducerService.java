@@ -36,12 +36,13 @@ public class ProducerService {
         rabbitTemplate.convertAndSend(proposalExchange, "proposal.queue", userInfo);
     }
 
-    public void sendProposalDeletion(Long userId) {
-        rabbitTemplate.convertAndSend(proposalExchange, "proposal.delete", userId);
-    }
 
     public void sendUserReceipt(UserReceiptDto dto) {
         rabbitTemplate.convertAndSend(documentationExchange, "documentation.user", dto);
+    }
+
+    public void sendProposalDeletion(Long userId) {
+        rabbitTemplate.convertAndSend(proposalExchange, "proposal.delete", userId);
     }
 
     public void sendDocumentDeletion(Long id) {

@@ -47,10 +47,18 @@ public class AbstractIntegration {
             props.put("spring.rabbitmq.password", rabbit.getAdminPassword());
 
             props.put("spring.rabbitmq.queue.proposal", "queue.proposal");
+            props.put("spring.rabbitmq.queue.proposal-delete", "queue.proposal.delete");
             props.put("spring.rabbitmq.queue.notification-created", "queue.notification.user.created");
             props.put("spring.rabbitmq.queue.notification-validation", "queue.notification.user.validation");
+            props.put("spring.rabbitmq.queue.notification-delete-user", "queue.notification.user.delete");
+            props.put("spring.rabbitmq.queue.notification-delete-confirmation", "queue.notification.user.confirmation");
+            props.put("spring.rabbitmq.queue.documentation.receipt", "queue.user.receipt");
+            props.put("spring.rabbitmq.queue.documentation.deletion", "queue.user.deletion");
+
             props.put("spring.rabbitmq.exchange.proposal", "proposal.exchange");
             props.put("spring.rabbitmq.exchange.notification", "notification.exchange");
+            props.put("spring.rabbitmq.exchange.documentation", "documentation.exchange");
+
 
             props.put("proposal.service.url", wiremock.getBaseUrl());
 

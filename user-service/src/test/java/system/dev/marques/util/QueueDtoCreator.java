@@ -1,9 +1,9 @@
 package system.dev.marques.util;
 
 import system.dev.marques.domain.dto.proposal.ProposalUserInfo;
-import system.dev.marques.domain.dto.rabbitmq.CreatedUserDto;
-import system.dev.marques.domain.dto.rabbitmq.UserReceiptDto;
-import system.dev.marques.domain.dto.rabbitmq.ValidUserDto;
+import system.dev.marques.domain.dto.rabbitmq.*;
+
+import java.util.List;
 
 public class QueueDtoCreator {
 
@@ -43,6 +43,23 @@ public class QueueDtoCreator {
                 .userEmail("murillo@gmail.com")
                 .userName("Murillo Marques")
                 .userId(1L)
+                .build();
+    }
+
+    public static DeleteUserDto createDeleteUserDto() {
+        return DeleteUserDto.builder()
+                .userId(1L)
+                .userEmail("murillo@gmail")
+                .adminEmails(List.of("murilloadmin@gmail"))
+                .reason("")
+                .build();
+    }
+
+    public static DeleteUserConfirmationDto createDeleteUserConfirmationDto() {
+        return DeleteUserConfirmationDto.builder()
+                .userName("Murillo")
+                .userEmail("murillo@gmail.com")
+                .date("2025/05/28")
                 .build();
     }
 }

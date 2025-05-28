@@ -80,7 +80,7 @@ class UserControllerIT extends AbstractIntegration {
     }
 
     @BeforeEach
-    void setUpBeforeEach() {
+    void setUp() {
         userRequest = userCreator.createUserRequest();
 
         if (!roleRepository.existsByName("ADMIN")) {

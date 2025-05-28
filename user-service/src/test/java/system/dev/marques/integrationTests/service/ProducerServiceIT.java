@@ -7,9 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import system.dev.marques.domain.dto.proposal.ProposalUserInfo;
-import system.dev.marques.domain.dto.rabbitmq.CreatedUserDto;
-import system.dev.marques.domain.dto.rabbitmq.UserReceiptDto;
-import system.dev.marques.domain.dto.rabbitmq.ValidUserDto;
+import system.dev.marques.domain.dto.rabbitmq.*;
 import system.dev.marques.integrationTests.AbstractIntegration;
 import system.dev.marques.service.ProducerService;
 
@@ -40,6 +38,23 @@ class ProducerServiceIT extends AbstractIntegration {
     @Autowired
     @Qualifier("documentationQueue")
     private Queue userReceiptQueue;
+
+    @Autowired
+    @Qualifier("proposalDeleteQueue")
+    private Queue proposalDeletionQueue;
+
+    @Autowired
+    @Qualifier("userDeleteQueue")
+    private Queue userDeletionQueue;
+
+    @Autowired
+    @Qualifier("userConfirmationQueue")
+    private Queue userConfirmationQueue;
+
+    @Autowired
+    @Qualifier("documentationDeletionQueue")
+    private Queue documentationDeletionQueue;
+
 
     @Test
     void shouldSendProposalToCorrectQueue() {
@@ -107,5 +122,65 @@ class ProducerServiceIT extends AbstractIntegration {
 
         assertThat(received).isEqualTo(dto);
 
+    }
+
+    @Test
+    void shouldSendProposalDeleteToCorrectQueue() {
+
+        producerService.sendProposalDeletion(1L);
+
+        Object message = rabbitTemplate.receiveAndConvert(proposalDeletionQueue.getName(), 5000);
+
+        assertThat(message).isNotNull();
+
+        Long id = (Long) message;
+
+        assertThat(id).isEqualTo(1L);
+    }
+
+    @Test
+    void shouldSendDocumentDeleteToCorrectQueue() {
+
+        producerService.sendDocumentDeletion(1L);
+
+        Object message = rabbitTemplate.receiveAndConvert(documentationDeletionQueue.getName(), 5000);
+
+        assertThat(message).isNotNull();
+
+        Long id = (Long) message;
+
+        assertThat(id).isEqualTo(1L);
+    }
+
+    @Test
+    void shouldSendDeleteDtoToCorrectQueue() {
+
+        DeleteUserDto dto = createDeleteUserDto();
+
+        producerService.sendDeleteDto(dto);
+
+        Object message = rabbitTemplate.receiveAndConvert(userDeletionQueue.getName(), 5000);
+
+        assertThat(message).isNotNull();
+
+        DeleteUserDto received = (DeleteUserDto) message;
+
+        assertThat(received).isEqualTo(dto);
+    }
+
+    @Test
+    void shouldSendDeleteUserConfirmationToCorrectQueue() {
+
+        DeleteUserConfirmationDto dto = createDeleteUserConfirmationDto();
+
+        producerService.sendUserDeleteConfirmation(dto);
+
+        Object message = rabbitTemplate.receiveAndConvert(userConfirmationQueue.getName(), 5000);
+
+        assertThat(message).isNotNull();
+
+        DeleteUserConfirmationDto received = (DeleteUserConfirmationDto) message;
+
+        assertThat(received).isEqualTo(dto);
     }
 }

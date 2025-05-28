@@ -4,12 +4,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import system.dev.marques.domain.Roles;
 import system.dev.marques.domain.User;
 import system.dev.marques.domain.dto.rabbitmq.DeleteUserConfirmationDto;
+import system.dev.marques.domain.dto.responses.UserAdminResponse;
 import system.dev.marques.mapper.UserMapper;
 import system.dev.marques.repository.UserRepository;
 
 import java.time.LocalDate;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -21,8 +25,22 @@ public class AdminService {
 
     private final UserMapper mapper;
 
-    public Page<User> findAll(Pageable pageable) {
-        return userRepository.findAll(pageable);
+    public Page<UserAdminResponse> findAll(Pageable pageable) {
+        Page<User> userPage = userRepository.findAll(pageable);
+        return userPage.map(u -> {
+            UserAdminResponse userPageResponse = mapper.toUserAdminResponse(u);
+            Set<String> roles = u.getRoles().stream().map(Roles::getName)
+                    .collect(Collectors.toSet());
+            userPageResponse.setRoles(roles);
+            return userPageResponse;
+        });
+    }
+
+    public UserAdminResponse findById(Long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        UserAdminResponse userAdminResponse = mapper.toUserAdminResponse(user);
+        userAdminResponse.setRoles(user.getRoles().stream().map(Roles::getName).collect(Collectors.toSet()));
+        return userAdminResponse;
     }
 
     public void deleteUser(long userId) {
@@ -56,5 +74,4 @@ public class AdminService {
     private void notifyProposalDelete(User user) {
         producerService.sendProposalDeletion(user.getId());
     }
-
 }

@@ -13,6 +13,7 @@ import system.dev.marques.domain.dto.requests.UserEnableRequest;
 import system.dev.marques.domain.dto.requests.UserRequest;
 import system.dev.marques.domain.dto.requests.UserRequestGoogle;
 import system.dev.marques.domain.dto.responses.UserEnabledResponse;
+import system.dev.marques.domain.dto.responses.UserAdminResponse;
 import system.dev.marques.domain.dto.responses.UserResponse;
 
 @Mapper(componentModel = "spring")
@@ -65,4 +66,7 @@ public interface UserMapper {
     @Mapping(target = "userName", source = "user.name")
     @Mapping(target = "userEmail", source = "user.email")
     DeleteUserConfirmationDto toDeleUserConfirmationDto(User user);
+
+    @Mapping(target = "roles", ignore = true)
+    UserAdminResponse toUserAdminResponse(User user);
 }

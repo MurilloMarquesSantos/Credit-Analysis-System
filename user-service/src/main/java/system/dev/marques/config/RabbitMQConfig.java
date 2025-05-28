@@ -81,7 +81,6 @@ public class RabbitMQConfig {
         return QueueBuilder.durable(userReceiptQueueName).build();
     }
 
-
     @Bean
     public Queue documentationDeletionQueue() {
         return QueueBuilder.durable(documentDeletionQueueName).build();
@@ -113,7 +112,7 @@ public class RabbitMQConfig {
     @Bean
     public Binding documentationDeleteBinding() {
         return BindingBuilder
-                .bind(documentationQueue())
+                .bind(documentationDeletionQueue())
                 .to(documentationExchange())
                 .with("documentation.deletion");
     }
