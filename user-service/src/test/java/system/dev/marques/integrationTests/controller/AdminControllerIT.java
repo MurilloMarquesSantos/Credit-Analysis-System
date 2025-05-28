@@ -210,6 +210,27 @@ class AdminControllerIT extends AbstractIntegration {
     }
 
     @Test
+    void getUserById_ReturnsBadRequest400_WhenUserIdDoesNotMatches() {
+
+        String token = generateToken(savedAdmin);
+
+        spec = new RequestSpecBuilder()
+                .setBasePath("/home/admin/list/{id}")
+                .setPort(8883)
+                .build();
+
+        RestAssured.given()
+                .spec(spec)
+                .contentType("application/json")
+                .header("Authorization", "Bearer " + token)
+                .pathParam("id", 10L)
+                .when()
+                .get()
+                .then()
+                .statusCode(400);
+    }
+
+    @Test
     void deleteUser_RemovesUser_WhenSuccessful() {
 
         String token = generateToken(savedAdmin);
@@ -253,5 +274,26 @@ class AdminControllerIT extends AbstractIntegration {
                 .delete()
                 .then()
                 .statusCode(403);
+    }
+
+    @Test
+    void deleteUser_ReturnsBadRequest400_WhenUserIdDoesNotMatches() {
+
+        String token = generateToken(savedAdmin);
+
+        spec = new RequestSpecBuilder()
+                .setBasePath("/home/admin/list/user/{id}")
+                .setPort(8883)
+                .build();
+
+        RestAssured.given()
+                .spec(spec)
+                .contentType("application/json")
+                .header("Authorization", "Bearer " + token)
+                .pathParam("id", 10L)
+                .when()
+                .delete()
+                .then()
+                .statusCode(400);
     }
 }

@@ -57,9 +57,9 @@ public class QueueDtoCreator {
 
     public static DeleteUserConfirmationDto createDeleteUserConfirmationDto() {
         return DeleteUserConfirmationDto.builder()
-                .userName("Murillo")
-                .userEmail("murillo@gmail.com")
-                .date("2025/05/28")
+                .userName("Murillo Marques")
+                .userEmail("murilloa@gmail.com")
+                .date("2025-05-28")
                 .build();
     }
 }

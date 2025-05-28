@@ -46,11 +46,10 @@ import java.util.stream.Collectors;
 @Log4j2
 public class UserService {
 
-    private final UserRepository userRepository;
     @Value("${google.default.password}")
     private String googlePassword;
 
-    private final UserRepository repository;
+    private final UserRepository userRepository;
 
     private final UserEnabledStrategyFactory enableStrategyFactory;
 
@@ -77,7 +76,7 @@ public class UserService {
         }
         User user = mapper.toUser(request);
         prepareUserDefault(user);
-        User savedUser = repository.save(user);
+        User savedUser = userRepository.save(user);
         sendCreatedMessage(savedUser, source);
         return mapper.toUserResponse(savedUser);
     }
@@ -86,12 +85,12 @@ public class UserService {
         validateRequest(request);
         User user = mapper.toUser(request);
         prepareUserAdmin(user);
-        User savedUser = repository.save(user);
+        User savedUser = userRepository.save(user);
         return mapper.toUserResponse(savedUser);
     }
 
     public User findUserById(Long id) {
-        return repository.findById(id).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        return userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("User not found"));
     }
 
 
@@ -132,7 +131,7 @@ public class UserService {
 
         user.setValid(true);
 
-        User savedUser = repository.save(user);
+        User savedUser = userRepository.save(user);
 
         return mapper.toUserEnabledResponse(savedUser);
     }
@@ -155,11 +154,11 @@ public class UserService {
     }
 
     public Optional<User> findByEmail(String email) {
-        return repository.findUserByEmail(email);
+        return userRepository.findUserByEmail(email);
     }
 
     public User findUserByEmailOrThrowIllegalArgumentException(String email) {
-        return repository.findUserByEmail(email).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        return userRepository.findUserByEmail(email).orElseThrow(() -> new IllegalArgumentException("User not found"));
     }
 
     private ValidUserDto formatUser(User user, String source) {
