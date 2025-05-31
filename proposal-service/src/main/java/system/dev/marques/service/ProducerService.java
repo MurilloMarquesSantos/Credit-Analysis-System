@@ -13,7 +13,7 @@ import system.dev.marques.domain.dto.ProposalStatusEmailDto;
 public class ProducerService {
 
     @Value("${spring.rabbitmq.exchange.credit}")
-    private String crediteExchangeName;
+    private String creditExchangeName;
 
     @Value("${spring.rabbitmq.exchange.proposal-notification}")
     private String notificationExchangeName;
@@ -25,8 +25,7 @@ public class ProducerService {
 
 
     public void sendProposalToCredit(ProposalCreditDto dto) {
-        rabbitTemplate.convertAndSend(crediteExchangeName, "credit.queue", dto);
-
+        rabbitTemplate.convertAndSend(creditExchangeName, "credit.queue", dto);
     }
 
     public void sendProposalStatus(ProposalStatusEmailDto dto) {

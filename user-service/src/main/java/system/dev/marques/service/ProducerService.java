@@ -36,7 +36,6 @@ public class ProducerService {
         rabbitTemplate.convertAndSend(proposalExchange, "proposal.queue", userInfo);
     }
 
-
     public void sendUserReceipt(UserReceiptDto dto) {
         rabbitTemplate.convertAndSend(documentationExchange, "documentation.user", dto);
     }
