@@ -81,9 +81,7 @@ class LoginControllerIT extends AbstractIntegration {
                 .cookie("JSESSIONID", sessionId)
                 .get("/")
                 .then()
-                .log().all()
                 .statusCode(200)
-                .log().all()
                 .extract()
                 .as(TokenLoginResponse.class);
 

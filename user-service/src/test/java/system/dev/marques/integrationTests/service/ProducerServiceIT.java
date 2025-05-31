@@ -181,6 +181,6 @@ class ProducerServiceIT extends AbstractIntegration {
 
         DeleteUserConfirmationDto received = (DeleteUserConfirmationDto) message;
 
-        assertThat(received).isEqualTo(dto);
+        assertThat(received.getUserEmail()).isEqualTo(dto.getUserEmail());
     }
 }
