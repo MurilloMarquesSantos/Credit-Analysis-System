@@ -19,10 +19,11 @@ public class ClientCreator {
                 .build();
     }
 
-    public Client createNotAdminClient() {
+    public Client createClientToBeSaved() {
         return Client.builder()
-                .clientId("test-client-not-admin")
-                .clientSecret(encoder.encode("test-secret-not-admin"))
+                .clientId("test-client-saved")
+                .clientSecret(encoder.encode("test-secret-saved"))
+                .scope("ADMIN")
                 .build();
     }
 }
