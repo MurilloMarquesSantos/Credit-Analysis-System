@@ -1,0 +1,21 @@
+package system.dev.marques.util;
+
+import system.dev.marques.domain.Proposal;
+import system.dev.marques.domain.enums.ProposalStatus;
+
+public class ProposalCreator {
+
+    public static Proposal createProposal() {
+        return Proposal.builder()
+                .userId(1L)
+                .cpf("12345678900")
+                .userEmail("murillo@gmail.com")
+                .userName("Murillo")
+                .userIncome(5000.0)
+                .requestedAmount(10000.0)
+                .installments(12)
+                .purpose("buy a car")
+                .status(ProposalStatus.PENDING)
+                .build();
+    }
+}
