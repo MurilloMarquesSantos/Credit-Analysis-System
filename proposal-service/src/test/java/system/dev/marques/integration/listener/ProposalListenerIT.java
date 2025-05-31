@@ -19,7 +19,7 @@ import static org.awaitility.Awaitility.await;
 import static system.dev.marques.util.QueueDtoCreator.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT, properties = "server.port=9000")
-class ListenerIT extends AbstractIntegration {
+class ProposalListenerIT extends AbstractIntegration {
 
     @Autowired
     private ProposalRepository proposalRepository;

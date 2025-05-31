@@ -97,7 +97,7 @@ public class S3Service {
 
         proposalNotificationDto.setUrl(url);
 
-        producerService.sendUserReceipt(proposalNotificationDto);
+        producerService.sendNotification(proposalNotificationDto);
     }
 
     public void deleteUserFolder(Long userId) {

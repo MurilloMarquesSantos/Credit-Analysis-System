@@ -21,6 +21,5 @@ spring:
     queue:
       notification:
         proposal-receipt: queue.notification.receipt
-        user-receipt: queue.notification.user.receipt
     exchange:
       notification: notification.receipt.exchange

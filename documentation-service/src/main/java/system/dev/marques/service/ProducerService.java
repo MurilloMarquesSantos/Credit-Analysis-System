@@ -19,8 +19,4 @@ public class ProducerService {
         rabbitTemplate.convertAndSend(notificationExchangeName, "notification.queue", dto);
     }
 
-    public void sendUserReceipt(ProposalNotificationDto dto) {
-        rabbitTemplate.convertAndSend(notificationExchangeName, "notification.user", dto);
-    }
-
 }

@@ -1,14 +1,12 @@
 package system.dev.marques.listener;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Service;
 import system.dev.marques.dto.*;
 import system.dev.marques.service.EmailService;
 
 @Service
-@Log4j2
 @RequiredArgsConstructor
 public class NotificationListener {
 
@@ -36,11 +34,6 @@ public class NotificationListener {
 
     @RabbitListener(queues = "queue.notification.receipt")
     public void listenProposalReceiptQueue(ProposalNotificationDto dto) {
-        emailService.sendProposalReceiptUrl(dto);
-    }
-
-    @RabbitListener(queues = "queue.notification.user.receipt")
-    public void listenUserReceiptQueue(ProposalNotificationDto dto) {
         emailService.sendProposalReceiptUrl(dto);
     }
 
