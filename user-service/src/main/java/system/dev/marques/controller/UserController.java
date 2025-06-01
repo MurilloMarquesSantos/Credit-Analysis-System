@@ -34,16 +34,14 @@ public class UserController {
         return new ResponseEntity<>(userService.saveAdmin(userRequest), HttpStatus.CREATED);
     }
 
-
     @GetMapping("/user/history")
     public ResponseEntity<Page<ProposalHistoryResponse>> getUserHistory(Principal principal, Pageable pageable) {
-        Long userId = Long.valueOf(principal.getName());
-        return ResponseEntity.ok(userService.fetchHistory(userId, pageable));
+        return ResponseEntity.ok(userService.fetchHistory(principal, pageable));
     }
 
     @GetMapping("/user/history/{id}")
-    public String getUserProposalReceipt(@PathVariable long id, Principal principal) {
-        return userService.sendUserReceipt(id, principal);
+    public ResponseEntity<String> getUserProposalReceipt(@PathVariable long id, Principal principal) {
+        return ResponseEntity.ok(userService.sendUserReceipt(id, principal));
     }
 
     @PostMapping("/user/delete")
