@@ -205,7 +205,8 @@ public class UserService {
 
     @Retry(name = "proposalService", fallbackMethod = "fallback")
     @CircuitBreaker(name = "proposalService", fallbackMethod = "fallback")
-    public Page<ProposalHistoryResponse> fetchHistory(Long userId, Pageable pageable) {
+    public Page<ProposalHistoryResponse> fetchHistory(Principal principal, Pageable pageable) {
+        Long userId = Long.valueOf(principal.getName());
         List<ProposalHistoryResponse> userHistory = webClient.get()
                 .uri("/service/history/{id}", userId)
                 .retrieve()
@@ -221,8 +222,9 @@ public class UserService {
     }
 
 
-    public Page<ProposalHistoryResponse> fallback(Long userId, Pageable pageable, Throwable t) {
-        log.error("Fallback triggered for fetchHistory with userId {}. Reason: {}", userId, t.getMessage());
+    public Page<ProposalHistoryResponse> fallback(Principal principal, Pageable pageable, Throwable t) {
+        log.error("Fallback triggered for fetchHistory with userId {}. Reason: {}", principal.getName(),
+                t.getMessage());
         throw new ServiceUnavailableException("Service is currently unavailable. Please try again later.");
     }
 
