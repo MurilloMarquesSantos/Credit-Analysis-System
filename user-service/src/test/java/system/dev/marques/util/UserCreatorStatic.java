@@ -1,7 +1,10 @@
 package system.dev.marques.util;
 
+import system.dev.marques.domain.dto.requests.UserEnableRequest;
 import system.dev.marques.domain.dto.requests.UserRequest;
+import system.dev.marques.domain.dto.requests.UserRequestGoogle;
 import system.dev.marques.domain.dto.responses.ProposalHistoryResponse;
+import system.dev.marques.domain.dto.responses.UserEnabledResponse;
 import system.dev.marques.domain.dto.responses.UserResponse;
 
 import java.time.LocalDateTime;
@@ -45,6 +48,35 @@ public class UserCreatorStatic {
                 .createdAt(LocalDateTime.now())
                 .build();
 
+    }
+
+    public static UserRequestGoogle createUserRequestGoogle() {
+        return UserRequestGoogle.builder()
+                .name("Murillo")
+                .password("")
+                .income(5000D)
+                .phoneNumber("")
+                .cpf("")
+                .build();
+    }
+
+    public static UserEnabledResponse createUserEnabledResponse() {
+        return UserEnabledResponse.builder()
+                .id(1L)
+                .name("Murillo")
+                .income(5000D)
+                .cpf("")
+                .phoneNumber("")
+                .password("")
+                .email("murillo@gmail.com")
+                .build();
+
+    }
+
+    public static UserEnableRequest createUserEnableRequest() {
+        return UserEnableRequest.builder()
+                .income(5000D)
+                .build();
     }
 
 
