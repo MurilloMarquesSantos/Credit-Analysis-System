@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import system.dev.marques.DocumentationApplication;
 import system.dev.marques.dto.ApprovedProposalDto;
 import system.dev.marques.dto.UserReceiptDto;
@@ -22,6 +23,7 @@ import static system.dev.marques.util.QueueDtoCreator.createUserReceiptDto;
 @SpringBootTest(classes = {DocumentationApplication.class, MockConfig.class},
         webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
         properties = "server.port=9596")
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 class ProposalApprovedListenerIT extends AbstractIntegration {
 
     @Autowired

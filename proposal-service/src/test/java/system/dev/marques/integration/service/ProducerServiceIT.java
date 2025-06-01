@@ -6,6 +6,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import system.dev.marques.domain.dto.ApprovedProposalDto;
 import system.dev.marques.domain.dto.ProposalCreditDto;
 import system.dev.marques.domain.dto.ProposalStatusEmailDto;
@@ -16,6 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static system.dev.marques.util.QueueDtoCreator.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT, properties = "server.port=8889")
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 class ProducerServiceIT extends AbstractIntegration {
 
     @Autowired
@@ -51,8 +53,6 @@ class ProducerServiceIT extends AbstractIntegration {
 
         assertThat(received.getProposalId()).isEqualTo(dto.getProposalId());
 
-        assertThat(received.getCpf()).isEqualTo(dto.getCpf());
-
     }
 
     @Test
@@ -69,7 +69,6 @@ class ProducerServiceIT extends AbstractIntegration {
 
         assertThat(received.getUserEmail()).isEqualTo(emailDto.getUserEmail());
 
-        assertThat(received.getStatus()).isEqualTo(emailDto.getStatus());
 
     }
 

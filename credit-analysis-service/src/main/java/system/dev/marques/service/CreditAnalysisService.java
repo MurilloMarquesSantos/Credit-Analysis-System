@@ -1,7 +1,6 @@
 package system.dev.marques.service;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import system.dev.marques.dto.AnalyzedDto;
 import system.dev.marques.dto.ProposalCreditDto;
@@ -12,7 +11,6 @@ import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
-@Log4j2
 public class CreditAnalysisService {
 
     private final CreditStrategyFactory strategyFactory;

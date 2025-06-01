@@ -11,5 +11,8 @@ spring:
     listener:
       simple:
         auto-startup: true
+    queue:
+      credit:
+        analyzed-credit: queue.analyzed.credit
     exchange:
       analyzed-credit: analyzed.exchange

@@ -1,7 +1,6 @@
 package system.dev.marques.listener;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Service;
 import system.dev.marques.dto.AnalyzedDto;
@@ -10,7 +9,6 @@ import system.dev.marques.service.CreditAnalysisService;
 import system.dev.marques.service.ProducerService;
 
 @Service
-@Log4j2
 @RequiredArgsConstructor
 public class CreditListener {
     private final CreditAnalysisService creditAnalysisService;

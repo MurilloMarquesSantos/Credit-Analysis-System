@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import system.dev.marques.NotificationApplication;
 import system.dev.marques.dto.*;
 import system.dev.marques.integration.AbstractIntegration;
@@ -20,6 +21,7 @@ import static system.dev.marques.util.QueueDtoCreator.*;
 @SpringBootTest(classes = {NotificationApplication.class, MockConfig.class},
         webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
         properties = "server.port=9595")
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 class NotificationListenerIT extends AbstractIntegration {
 
     @Autowired

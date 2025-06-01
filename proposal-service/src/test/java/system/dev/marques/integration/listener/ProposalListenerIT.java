@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import system.dev.marques.domain.Proposal;
 import system.dev.marques.domain.dto.AnalyzedDto;
 import system.dev.marques.domain.dto.ProposalDto;
@@ -19,6 +20,7 @@ import static org.awaitility.Awaitility.await;
 import static system.dev.marques.util.QueueDtoCreator.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT, properties = "server.port=9000")
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 class ProposalListenerIT extends AbstractIntegration {
 
     @Autowired

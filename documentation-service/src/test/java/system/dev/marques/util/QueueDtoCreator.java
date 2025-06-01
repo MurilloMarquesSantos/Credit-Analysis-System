@@ -1,6 +1,7 @@
 package system.dev.marques.util;
 
 import system.dev.marques.dto.ApprovedProposalDto;
+import system.dev.marques.dto.ProposalNotificationDto;
 import system.dev.marques.dto.UserReceiptDto;
 
 import java.time.LocalDateTime;
@@ -28,6 +29,14 @@ public class QueueDtoCreator {
                 .userId(1L)
                 .userEmail("murillo@gmail.com")
                 .userName("Murillo")
+                .build();
+    }
+
+    public static ProposalNotificationDto createProposalNotificationDto() {
+        return ProposalNotificationDto.builder()
+                .userEmail("murillo@gmail.com")
+                .userName("Murillo")
+                .url("http://localhost:8080")
                 .build();
     }
 }

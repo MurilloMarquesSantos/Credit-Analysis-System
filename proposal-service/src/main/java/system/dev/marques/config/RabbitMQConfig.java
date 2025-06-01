@@ -16,18 +16,11 @@ public class RabbitMQConfig {
     @Value("${spring.rabbitmq.queue.credit.analysis}")
     private String creditQueueName;
 
-    @Value("${spring.rabbitmq.queue.credit.analyzed-credit}")
-    private String analyzedCreditQueueName;
-
-
     @Value("${spring.rabbitmq.queue.notification.proposal-status}")
     private String notificationStatusQueueName;
 
     @Value("${spring.rabbitmq.exchange.credit}")
     private String crediteExchangeName;
-
-    @Value("${spring.rabbitmq.exchange.analyzed-credit}")
-    private String analyzedCreditExchangeName;
 
     @Value("${spring.rabbitmq.exchange.proposal-notification}")
     private String notificationExchangeName;
@@ -40,10 +33,7 @@ public class RabbitMQConfig {
         return QueueBuilder.durable(creditQueueName).build();
     }
 
-    @Bean
-    public Queue analyzedCreditQueue() {
-        return QueueBuilder.durable(analyzedCreditQueueName).build();
-    }
+
 
     @Bean
     public Queue notificationQueue() {
@@ -66,10 +56,7 @@ public class RabbitMQConfig {
     }
 
 
-    @Bean
-    public DirectExchange analyzedCreditExchange() {
-        return new DirectExchange(analyzedCreditExchangeName);
-    }
+
 
     @Bean
     public DirectExchange notificationExchange() {
@@ -84,13 +71,7 @@ public class RabbitMQConfig {
                 .with("credit.queue");
     }
 
-    @Bean
-    public Binding bindingAnalyzedCredit() {
-        return BindingBuilder
-                .bind(analyzedCreditQueue())
-                .to(analyzedCreditExchange())
-                .with("analyzed-credit.queue");
-    }
+
 
     @Bean
     public Binding bindingNotification() {
