@@ -1,17 +1,16 @@
 package system.dev.marques.controller;
 
 import org.apache.coyote.BadRequestException;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import system.dev.marques.domain.dto.requests.DeleteForm;
 import system.dev.marques.domain.dto.requests.UserRequest;
 import system.dev.marques.domain.dto.responses.ProposalHistoryResponse;
@@ -26,7 +25,7 @@ import static org.mockito.BDDMockito.when;
 import static system.dev.marques.util.FormCreator.createDeleteForm;
 import static system.dev.marques.util.UserCreatorStatic.*;
 
-@ExtendWith(SpringExtension.class)
+@ExtendWith(MockitoExtension.class)
 class UserControllerTest {
 
     @InjectMocks
@@ -35,30 +34,11 @@ class UserControllerTest {
     @Mock
     private UserService userServiceMock;
 
-
-    @BeforeEach
-    void setUp() throws BadRequestException {
-
-        PageImpl<ProposalHistoryResponse> historyPage = new PageImpl<>(List.of(createProposalHistoryResponse()));
+    @Test
+    void create_ReturnsUserResponse_WhenSuccessful() throws BadRequestException {
 
         when(userServiceMock.saveUser(ArgumentMatchers.any(UserRequest.class), ArgumentMatchers.anyString()))
                 .thenReturn(createUserResponse());
-
-        when(userServiceMock.saveAdmin(ArgumentMatchers.any(UserRequest.class)))
-                .thenReturn(createUserResponse());
-
-        when(userServiceMock.fetchHistory(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(historyPage);
-        
-        when(userServiceMock.sendUserReceipt(ArgumentMatchers.anyLong(), ArgumentMatchers.any()))
-                .thenReturn("Request processed successfully, stay alert on your email box.");
-
-        when(userServiceMock.submitDeleteRequest(ArgumentMatchers.any(DeleteForm.class), ArgumentMatchers.any()))
-                .thenReturn("Request processed successfully, stay alert on your email box.");
-
-    }
-
-    @Test
-    void create_ReturnsUserResponse_WhenSuccessful() throws BadRequestException {
 
         UserRequest request = createUserRequest();
 
@@ -79,6 +59,9 @@ class UserControllerTest {
 
     @Test
     void createAdmin_ReturnsUserResponse_WhenSuccessful() throws BadRequestException {
+
+        when(userServiceMock.saveAdmin(ArgumentMatchers.any(UserRequest.class)))
+                .thenReturn(createUserResponse());
 
         UserRequest request = createUserRequest();
 
@@ -112,6 +95,10 @@ class UserControllerTest {
     @Test
     void getUserHistory_ReturnsHistoryPage_WhenSuccessful() {
 
+        PageImpl<ProposalHistoryResponse> historyPage = new PageImpl<>(List.of(createProposalHistoryResponse()));
+        when(userServiceMock.fetchHistory(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(historyPage);
+
+
         ResponseEntity<Page<ProposalHistoryResponse>> responseEntity =
                 userController.getUserHistory(null, null);
 
@@ -128,9 +115,11 @@ class UserControllerTest {
         assertThat(userHistoryPage.getTotalElements()).isEqualTo(1);
 
     }
-    
+
     @Test
     void getUserProposalReceipt_ReturnsStringMessage_WhenSuccessful() {
+        when(userServiceMock.sendUserReceipt(ArgumentMatchers.anyLong(), ArgumentMatchers.any()))
+                .thenReturn("Request processed successfully, stay alert on your email box.");
 
         ResponseEntity<String> responseEntity = userController.getUserProposalReceipt(1L, null);
 
@@ -147,6 +136,9 @@ class UserControllerTest {
 
     @Test
     void userDeleteForm_ReturnsStringMessage_WhenSuccessful() {
+
+        when(userServiceMock.submitDeleteRequest(ArgumentMatchers.any(DeleteForm.class), ArgumentMatchers.any()))
+                .thenReturn("Request processed successfully, stay alert on your email box.");
 
         DeleteForm deleteForm = createDeleteForm();
 
