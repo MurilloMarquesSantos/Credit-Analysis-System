@@ -45,11 +45,7 @@ class LoginControllerTest {
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-        assertThat(responseEntity.getBody()).isNotNull();
-
-        TokenLoginResponse response = responseEntity.getBody();
-
-        assertThat(response).isEqualTo(token);
+        assertThat(responseEntity.getBody()).isNotNull().isEqualTo(token);
     }
 
 }

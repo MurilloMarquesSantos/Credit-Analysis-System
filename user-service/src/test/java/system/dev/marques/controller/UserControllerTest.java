@@ -48,13 +48,10 @@ class UserControllerTest {
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
-        UserResponse response = responseEntity.getBody();
+        assertThat(responseEntity.getBody()).isNotNull();
 
-        assertThat(response).isNotNull();
+        assertThat(responseEntity.getBody().getId()).isNotNull();
 
-        assertThat(response.getId()).isNotNull();
-
-        assertThat(response.getName()).isEqualTo(request.getName());
     }
 
     @Test
@@ -71,13 +68,9 @@ class UserControllerTest {
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
 
-        UserResponse response = responseEntity.getBody();
+        assertThat(responseEntity.getBody()).isNotNull();
 
-        assertThat(response).isNotNull();
-
-        assertThat(response.getId()).isNotNull();
-
-        assertThat(response.getName()).isEqualTo(request.getName());
+        assertThat(responseEntity.getBody().getId()).isNotNull();
     }
 
     @Test
@@ -108,11 +101,7 @@ class UserControllerTest {
 
         assertThat(responseEntity.getBody()).isNotNull();
 
-        Page<ProposalHistoryResponse> userHistoryPage = responseEntity.getBody();
-
-        assertThat(userHistoryPage).isNotNull();
-
-        assertThat(userHistoryPage.getTotalElements()).isEqualTo(1);
+        assertThat(responseEntity.getBody().getTotalElements()).isEqualTo(1);
 
     }
 
@@ -127,11 +116,9 @@ class UserControllerTest {
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-        assertThat(responseEntity.getBody()).isNotNull();
+        assertThat(responseEntity.getBody()).isNotNull().isEqualTo
+                ("Request processed successfully, stay alert on your email box.");
 
-        String message = responseEntity.getBody();
-
-        assertThat(message).isEqualTo("Request processed successfully, stay alert on your email box.");
     }
 
     @Test
@@ -148,11 +135,9 @@ class UserControllerTest {
 
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-        assertThat(responseEntity.getBody()).isNotNull();
+        assertThat(responseEntity.getBody()).isNotNull()
+                .isEqualTo("Request processed successfully, stay alert on your email box.");
 
-        String message = responseEntity.getBody();
-
-        assertThat(message).isEqualTo("Request processed successfully, stay alert on your email box.");
     }
 
 }

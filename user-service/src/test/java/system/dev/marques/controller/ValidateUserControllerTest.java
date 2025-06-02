@@ -44,10 +44,7 @@ class ValidateUserControllerTest {
 
         assertThat(responseEntity.getBody()).isNotNull();
 
-
-        UserEnabledResponse response = responseEntity.getBody();
-
-        assertThat(response.getIncome()).isEqualTo(request.getIncome());
+        assertThat(responseEntity.getBody().getIncome()).isEqualTo(request.getIncome());
 
     }
 
@@ -70,9 +67,7 @@ class ValidateUserControllerTest {
 
         assertThat(responseEntity.getBody()).isNotNull();
 
-        UserEnabledResponse response = responseEntity.getBody();
-
-        assertThat(response.getIncome()).isEqualTo(request.getIncome());
+        assertThat(responseEntity.getBody().getIncome()).isEqualTo(request.getIncome());
 
     }
 

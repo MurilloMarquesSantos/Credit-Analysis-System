@@ -4,10 +4,12 @@ import system.dev.marques.domain.dto.requests.UserEnableRequest;
 import system.dev.marques.domain.dto.requests.UserRequest;
 import system.dev.marques.domain.dto.requests.UserRequestGoogle;
 import system.dev.marques.domain.dto.responses.ProposalHistoryResponse;
+import system.dev.marques.domain.dto.responses.UserAdminResponse;
 import system.dev.marques.domain.dto.responses.UserEnabledResponse;
 import system.dev.marques.domain.dto.responses.UserResponse;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 public class UserCreatorStatic {
 
@@ -76,6 +78,21 @@ public class UserCreatorStatic {
     public static UserEnableRequest createUserEnableRequest() {
         return UserEnableRequest.builder()
                 .income(5000D)
+                .build();
+    }
+
+    public static UserAdminResponse createUserAdminResponse() {
+        return UserAdminResponse.builder()
+                .id(1L)
+                .name("Murillo")
+                .email("murillo@gmail.com")
+                .cpf("12345678900")
+                .phoneNumber("11999999999")
+                .income(5000D)
+                .password("password")
+                .roles(Set.of("ADMIN"))
+                .valid(true)
+                .lastProposalAt(LocalDateTime.now())
                 .build();
     }
 
