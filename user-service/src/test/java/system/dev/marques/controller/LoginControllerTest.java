@@ -2,7 +2,6 @@ package system.dev.marques.controller;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -12,6 +11,7 @@ import system.dev.marques.domain.dto.responses.TokenLoginResponse;
 import system.dev.marques.service.UserService;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.when;
 import static system.dev.marques.util.TokenResponseCreator.createTokenLoginResponse;
 
@@ -37,7 +37,7 @@ class LoginControllerTest {
 
         TokenLoginResponse token = createTokenLoginResponse();
 
-        when(userServiceMock.createToken(ArgumentMatchers.any())).thenReturn(token);
+        when(userServiceMock.createToken(any())).thenReturn(token);
 
         ResponseEntity<TokenLoginResponse> responseEntity = loginController.homePage(null);
 

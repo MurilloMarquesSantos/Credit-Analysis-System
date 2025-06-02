@@ -38,8 +38,8 @@ import system.dev.marques.strategy.verification.UserValidationStrategyFactory;
 import java.security.Principal;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -207,21 +207,21 @@ public class UserService {
     @CircuitBreaker(name = "proposalService", fallbackMethod = "fallback")
     public Page<ProposalHistoryResponse> fetchHistory(Principal principal, Pageable pageable) {
         Long userId = Long.valueOf(principal.getName());
-        List<ProposalHistoryResponse> userHistory = webClient.get()
+
+        List<ProposalHistoryResponse> userHistory = Objects.requireNonNull(webClient.get()
                 .uri("/service/history/{id}", userId)
                 .retrieve()
                 .bodyToFlux(ProposalHistoryResponse.class)
                 .collectList()
-                .block();
-        if (userHistory == null || userHistory.isEmpty()) {
+                .block());
+
+        if (userHistory.isEmpty()) {
             return Page.empty();
         }
-
         return toPage(pageable, userHistory);
-
     }
 
-
+    @SuppressWarnings({"unused"})
     public Page<ProposalHistoryResponse> fallback(Principal principal, Pageable pageable, Throwable t) {
         log.error("Fallback triggered for fetchHistory with userId {}. Reason: {}", principal.getName(),
                 t.getMessage());
@@ -251,7 +251,7 @@ public class UserService {
         Long userId = Long.valueOf(principal.getName());
         User user = findUserById(userId);
         List<User> admins = userRepository.findAllByRoleName("ADMIN");
-        List<String> adminEmails = admins.stream().map(User::getEmail).collect(Collectors.toList());
+        List<String> adminEmails = admins.stream().map(User::getEmail).toList();
         DeleteUserDto deleteUserDto = mapper.toDeleteUserDto(user);
         deleteUserDto.setAdminEmails(adminEmails);
         deleteUserDto.setReason(form.getReason());

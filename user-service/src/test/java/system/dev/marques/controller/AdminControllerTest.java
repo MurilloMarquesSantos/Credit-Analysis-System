@@ -2,7 +2,6 @@ package system.dev.marques.controller;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -17,6 +16,8 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.when;
 import static org.mockito.Mockito.doNothing;
 import static system.dev.marques.util.UserCreatorStatic.createUserAdminResponse;
@@ -35,7 +36,7 @@ class AdminControllerTest {
 
         PageImpl<UserAdminResponse> userAdminPage = new PageImpl<>(List.of(createUserAdminResponse()));
 
-        when(adminServiceMock.findAll(ArgumentMatchers.any())).thenReturn(userAdminPage);
+        when(adminServiceMock.findAll(any())).thenReturn(userAdminPage);
 
         ResponseEntity<Page<UserAdminResponse>> responseEntity = adminController.list(null);
 
@@ -54,7 +55,7 @@ class AdminControllerTest {
 
         UserAdminResponse userAdminResponse = createUserAdminResponse();
 
-        when(adminServiceMock.findById(ArgumentMatchers.anyLong())).thenReturn(userAdminResponse);
+        when(adminServiceMock.findById(anyLong())).thenReturn(userAdminResponse);
 
         ResponseEntity<UserAdminResponse> responseEntity = adminController.getUserById(1L);
 
@@ -68,7 +69,7 @@ class AdminControllerTest {
     @Test
     void deleteUser_DoesNotThrowException_WhenSuccessful() {
 
-        doNothing().when(adminServiceMock).deleteUser(ArgumentMatchers.anyLong());
+        doNothing().when(adminServiceMock).deleteUser(anyLong());
 
         assertThatCode(() -> adminController.deleteUser(1L)).doesNotThrowAnyException();
 

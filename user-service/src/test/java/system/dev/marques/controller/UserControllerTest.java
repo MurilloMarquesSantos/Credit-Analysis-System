@@ -3,7 +3,6 @@ package system.dev.marques.controller;
 import org.apache.coyote.BadRequestException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -21,6 +20,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.when;
 import static system.dev.marques.util.FormCreator.createDeleteForm;
 import static system.dev.marques.util.UserCreatorStatic.*;
@@ -37,7 +37,7 @@ class UserControllerTest {
     @Test
     void create_ReturnsUserResponse_WhenSuccessful() throws BadRequestException {
 
-        when(userServiceMock.saveUser(ArgumentMatchers.any(UserRequest.class), ArgumentMatchers.anyString()))
+        when(userServiceMock.saveUser(any(UserRequest.class), anyString()))
                 .thenReturn(createUserResponse());
 
         UserRequest request = createUserRequest();
@@ -57,7 +57,7 @@ class UserControllerTest {
     @Test
     void createAdmin_ReturnsUserResponse_WhenSuccessful() throws BadRequestException {
 
-        when(userServiceMock.saveAdmin(ArgumentMatchers.any(UserRequest.class)))
+        when(userServiceMock.saveAdmin(any(UserRequest.class)))
                 .thenReturn(createUserResponse());
 
         UserRequest request = createUserRequest();
@@ -76,7 +76,7 @@ class UserControllerTest {
     @Test
     void create_ThrowsException_WhenRequestIsInvalid() throws BadRequestException {
 
-        when(userServiceMock.saveUser(ArgumentMatchers.any(UserRequest.class), ArgumentMatchers.anyString()))
+        when(userServiceMock.saveUser(any(UserRequest.class), anyString()))
                 .thenThrow(new BadRequestException("Validation failed for field(s)"));
 
         assertThatExceptionOfType(BadRequestException.class)
@@ -89,7 +89,7 @@ class UserControllerTest {
     void getUserHistory_ReturnsHistoryPage_WhenSuccessful() {
 
         PageImpl<ProposalHistoryResponse> historyPage = new PageImpl<>(List.of(createProposalHistoryResponse()));
-        when(userServiceMock.fetchHistory(ArgumentMatchers.any(), ArgumentMatchers.any())).thenReturn(historyPage);
+        when(userServiceMock.fetchHistory(any(), any())).thenReturn(historyPage);
 
 
         ResponseEntity<Page<ProposalHistoryResponse>> responseEntity =
@@ -107,7 +107,7 @@ class UserControllerTest {
 
     @Test
     void getUserProposalReceipt_ReturnsStringMessage_WhenSuccessful() {
-        when(userServiceMock.sendUserReceipt(ArgumentMatchers.anyLong(), ArgumentMatchers.any()))
+        when(userServiceMock.sendUserReceipt(anyLong(), any()))
                 .thenReturn("Request processed successfully, stay alert on your email box.");
 
         ResponseEntity<String> responseEntity = userController.getUserProposalReceipt(1L, null);
@@ -124,7 +124,7 @@ class UserControllerTest {
     @Test
     void userDeleteForm_ReturnsStringMessage_WhenSuccessful() {
 
-        when(userServiceMock.submitDeleteRequest(ArgumentMatchers.any(DeleteForm.class), ArgumentMatchers.any()))
+        when(userServiceMock.submitDeleteRequest(any(DeleteForm.class), any()))
                 .thenReturn("Request processed successfully, stay alert on your email box.");
 
         DeleteForm deleteForm = createDeleteForm();

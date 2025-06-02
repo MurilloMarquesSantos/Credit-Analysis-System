@@ -32,6 +32,8 @@ public class UserCreator {
                 .build();
     }
 
+
+
     public User createAdmin() {
         return User.builder()
                 .cpf("39053344705")
