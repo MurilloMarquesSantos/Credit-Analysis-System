@@ -10,7 +10,6 @@ public class EnableTokenCreator {
 
     public static EnableUserToken createUserToken() {
         return EnableUserToken.builder()
-                .id(1L)
                 .userId(1L)
                 .token(UUID.randomUUID().toString())
                 .expirationDate(LocalDateTime.now().plusMinutes(10))

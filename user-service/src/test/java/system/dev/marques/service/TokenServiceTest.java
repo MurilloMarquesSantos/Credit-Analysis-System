@@ -70,6 +70,7 @@ class TokenServiceTest {
     @Test
     void validateToken_ReturnsTrue_WhenSuccessful() {
         EnableUserToken userToken = createUserToken();
+        userToken.setId(1L);
 
         when(tokenRepositoryMock.findByToken(anyString())).thenReturn(Optional.of(userToken));
         doNothing().when(tokenRepositoryMock).deleteById(anyLong());
