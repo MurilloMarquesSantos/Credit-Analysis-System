@@ -111,7 +111,7 @@ public static UserEnableRequest createUserEnableRequest() {
 public static UserAdminResponse createUserAdminResponse() {
     return UserAdminResponse.builder()
             .id(1L)
-            .name("Murillo")
+            .name("Murillo Marques")
             .email("murillo@gmail.com")
             .cpf("12345678900")
             .phoneNumber("11999999999")
