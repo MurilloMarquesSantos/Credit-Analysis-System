@@ -1,7 +1,6 @@
 package system.dev.marques.util;
 
 import system.dev.marques.domain.dto.proposal.ProposalRequest;
-import system.dev.marques.domain.dto.requests.UserRequestGoogle;
 
 public class RequestCreator {
 

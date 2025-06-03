@@ -35,7 +35,9 @@ public class ProposalService {
             long minutes = minutesLeft % 60;
 
             throw new BadRequestException(
-                    String.format("You already submitted a proposal in the last 24 hours. Try again in %d hour(s) and %d minute(s).", hours, minutes)
+                    String.format(
+                            "You already submitted a proposal in the last 24 hours." +
+                                    " Try again in %d hour(s) and %d minute(s).", hours, minutes)
             );
         }
 
