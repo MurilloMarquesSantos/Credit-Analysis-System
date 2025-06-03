@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.coyote.BadRequestException;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -46,8 +45,7 @@ import java.util.Optional;
 @Log4j2
 public class UserService {
 
-    @Value("${google.default.password}")
-    private String googlePassword;
+    private static final String GOOGLE_PASSWORD = "googleuser";
 
     private final UserRepository userRepository;
 
@@ -112,7 +110,7 @@ public class UserService {
         Long userId = Long.valueOf(token.getSubject());
         User user = findUserById(userId);
         String password = user.getPassword();
-        if (passwordEncoder.matches(googlePassword, password)) {
+        if (passwordEncoder.matches(GOOGLE_PASSWORD, password)) {
             producerService.sendValidation(formatUser(user, GOOGLE_SOURCE));
         } else {
             producerService.sendValidation(formatUser(user, "formlogin"));

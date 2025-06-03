@@ -11,7 +11,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import system.dev.marques.domain.Roles;
@@ -242,8 +241,6 @@ class UserServiceTest {
     @Test
     void notifyUser_SendsNotificationGoogle_WhenSuccessful() {
 
-        ReflectionTestUtils.setField(userService, "googlePassword", "google");
-
         User savedUser = createSavedUser();
 
         when(userRepositoryMock.findById(anyLong())).thenReturn(Optional.of(createSavedUser()));
@@ -267,8 +264,6 @@ class UserServiceTest {
 
     @Test
     void notifyUser_SendsNotificationForm_WhenSuccessful() {
-
-        ReflectionTestUtils.setField(userService, "googlePassword", "google");
 
         User savedUser = createSavedUser();
 

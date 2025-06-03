@@ -65,9 +65,6 @@ resilience4j:
       proposalService:
         maxAttempts: 3
         waitDuration: 2s
-google:
-  default:
-    password: ${GOOGLE_DEFAULT_PASSWORD}
 
 proposal:
   service:
