@@ -19,7 +19,7 @@ public class UserCreatorStatic {
         return User.builder()
                 .id(1L)
                 .cpf("12345678909")
-                .email("murilloa@gmail.com")
+                .email("murillo@gmail.com")
                 .name("Murillo Marques")
                 .phoneNumber("11885786421")
                 .password("Murillo@12345")
