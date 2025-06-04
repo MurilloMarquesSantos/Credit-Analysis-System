@@ -1,7 +1,10 @@
 package system.dev.marques.util;
 
 import system.dev.marques.domain.Proposal;
+import system.dev.marques.domain.dto.reponse.ProposalHistoryResponse;
 import system.dev.marques.domain.enums.ProposalStatus;
+
+import java.time.LocalDateTime;
 
 public class ProposalCreator {
 
@@ -17,5 +20,16 @@ public class ProposalCreator {
                 .purpose("buy a car")
                 .status(ProposalStatus.PENDING)
                 .build();
+    }
+
+    public static ProposalHistoryResponse createProposalHistoryResponse() {
+        return ProposalHistoryResponse.builder()
+                .proposalId(1L)
+                .createdAt(LocalDateTime.now())
+                .cpf("0123456789")
+                .requestedAmount(5000D)
+                .status(ProposalStatus.APPROVED)
+                .build();
+
     }
 }
