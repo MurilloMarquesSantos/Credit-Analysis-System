@@ -29,63 +29,56 @@ public class RabbitMQConfig {
     private String documentExchangeName;
 
     @Bean
-    public Queue creditQueue() {
+    public Queue creditQueueProposal() {
         return QueueBuilder.durable(creditQueueName).build();
     }
 
-
-
     @Bean
-    public Queue notificationQueue() {
+    public Queue notificationQueueProposal() {
         return QueueBuilder.durable(notificationStatusQueueName).build();
     }
 
     @Bean
-    public Queue documentationQueue() {
+    public Queue documentationQueueProposal() {
         return QueueBuilder.durable(documentQueueName).build();
     }
 
     @Bean
-    public DirectExchange documentExchange() {
+    public DirectExchange documentExchangeProposal() {
         return new DirectExchange(documentExchangeName);
     }
 
     @Bean
-    public DirectExchange creditExchange() {
+    public DirectExchange creditExchangeProposal() {
         return new DirectExchange(crediteExchangeName);
     }
 
-
-
-
     @Bean
-    public DirectExchange notificationExchange() {
+    public DirectExchange notificationExchangeProposal() {
         return new DirectExchange(notificationExchangeName);
     }
 
     @Bean
-    public Binding bindingCredit() {
+    public Binding bindingCreditProposal() {
         return BindingBuilder
-                .bind(creditQueue())
-                .to(creditExchange())
+                .bind(creditQueueProposal())
+                .to(creditExchangeProposal())
                 .with("credit.queue");
     }
 
-
-
     @Bean
-    public Binding bindingNotification() {
+    public Binding bindingNotificationProposal() {
         return BindingBuilder
-                .bind(notificationQueue())
-                .to(notificationExchange())
+                .bind(notificationQueueProposal())
+                .to(notificationExchangeProposal())
                 .with("status.queue");
     }
 
     @Bean
-    public Binding bindingDocumentation() {
+    public Binding bindingDocumentationProposal() {
         return BindingBuilder
-                .bind(documentationQueue())
-                .to(documentExchange())
+                .bind(documentationQueueProposal())
+                .to(documentExchangeProposal())
                 .with("document.queue");
     }
 

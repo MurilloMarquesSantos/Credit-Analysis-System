@@ -47,6 +47,38 @@ public class RabbitMQConfig {
     @Value("${spring.rabbitmq.queue.proposal-delete}")
     private String proposalDeleteQueueName;
 
+
+    @Value("${spring.rabbitmq.queue.credit.analyzed-credit}")
+    private String analyzedCreditQueueName;
+
+    @Value("${spring.rabbitmq.exchange.analyzed-credit}")
+    private String analyzedCreditExchangeName;
+
+    @Value("${spring.rabbitmq.queue.notification.proposal-receipt}")
+    private String notificationQueueName;
+
+    @Value("${spring.rabbitmq.exchange.notification-receipt}")
+    private String notificationExchangeName;
+
+
+    @Value("${spring.rabbitmq.queue.documentation.documentation-info}")
+    private String documentQueueName;
+
+    @Value("${spring.rabbitmq.queue.credit.analysis}")
+    private String creditQueueName;
+
+    @Value("${spring.rabbitmq.queue.notification.proposal-status}")
+    private String notificationStatusQueueName;
+
+    @Value("${spring.rabbitmq.exchange.credit}")
+    private String crediteExchangeName;
+
+    @Value("${spring.rabbitmq.exchange.proposal-notification}")
+    private String notificationExchangeNameProposal;
+
+    @Value("${spring.rabbitmq.exchange.documentation-document}")
+    private String documentExchangeName;
+
     @Bean
     public Queue userValidationQueue() {
         return QueueBuilder.durable(notificationValidationQueue).build();
@@ -84,6 +116,96 @@ public class RabbitMQConfig {
     @Bean
     public Queue documentationDeletionQueue() {
         return QueueBuilder.durable(documentDeletionQueueName).build();
+    }
+
+    @Bean
+    public Queue analyzedCreditQueue() {
+        return QueueBuilder.durable(analyzedCreditQueueName).build();
+    }
+
+    @Bean
+    public DirectExchange analyzedCreditExchange() {
+        return new DirectExchange(analyzedCreditExchangeName);
+    }
+
+    @Bean
+    public Binding bindingAnalyzedCredit() {
+        return BindingBuilder
+                .bind(analyzedCreditQueue())
+                .to(analyzedCreditExchange())
+                .with("analyzed-credit.queue");
+    }
+
+    @Bean
+    public Queue creditQueueProposal() {
+        return QueueBuilder.durable(creditQueueName).build();
+    }
+
+    @Bean
+    public Queue notificationQueueProposal() {
+        return QueueBuilder.durable(notificationStatusQueueName).build();
+    }
+
+    @Bean
+    public Queue documentationQueueProposal() {
+        return QueueBuilder.durable(documentQueueName).build();
+    }
+
+    @Bean
+    public DirectExchange documentExchangeProposal() {
+        return new DirectExchange(documentExchangeName);
+    }
+
+    @Bean
+    public DirectExchange creditExchangeProposal() {
+        return new DirectExchange(crediteExchangeName);
+    }
+
+    @Bean
+    public DirectExchange notificationExchangeProposal() {
+        return new DirectExchange(notificationExchangeNameProposal);
+    }
+
+    @Bean
+    public Binding bindingCreditProposal() {
+        return BindingBuilder
+                .bind(creditQueueProposal())
+                .to(creditExchangeProposal())
+                .with("credit.queue");
+    }
+
+    @Bean
+    public Binding bindingNotificationProposal() {
+        return BindingBuilder
+                .bind(notificationQueueProposal())
+                .to(notificationExchangeProposal())
+                .with("status.queue");
+    }
+
+    @Bean
+    public Binding bindingDocumentationProposal() {
+        return BindingBuilder
+                .bind(documentationQueueProposal())
+                .to(documentExchangeProposal())
+                .with("document.queue");
+    }
+
+    @Bean
+    public Queue notificationQueue() {
+        return QueueBuilder.durable(notificationQueueName).build();
+    }
+
+    @Bean
+    public DirectExchange notificationExchange() {
+        return new DirectExchange(notificationExchangeName);
+    }
+
+    @Bean
+    public Binding notificationBinding() {
+        return BindingBuilder
+                .bind(notificationQueue())
+                .to(notificationExchange())
+                .with("notification.queue");
     }
 
     @Bean

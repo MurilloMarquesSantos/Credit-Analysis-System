@@ -27,15 +27,15 @@ class ProducerServiceIT extends AbstractIntegration {
     private RabbitTemplate rabbitTemplate;
 
     @Autowired
-    @Qualifier("documentationQueue")
+    @Qualifier("documentationQueueProposal")
     private Queue documentQueue;
 
     @Autowired
-    @Qualifier("creditQueue")
+    @Qualifier("creditQueueProposal")
     private Queue creditQueue;
 
     @Autowired
-    @Qualifier("notificationQueue")
+    @Qualifier("notificationQueueProposal")
     private Queue notificationStatusQueue;
 
 

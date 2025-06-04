@@ -48,10 +48,23 @@ spring:
       documentation:
         receipt: queue.user.receipt
         deletion: queue.user.deletion
+        documentation-info: queue.documentation
+      credit:
+        analyzed-credit: queue.analyzed.credit
+        analysis: queue.credit.analysis
+      notification:
+        proposal-receipt: queue.notification.receipt
+        proposal-status: queue.proposal.status
+
     exchange:
       notification: notification.exchange
+      notification-receipt: notification.receipt.exchange
       proposal: proposal.exchange
       documentation: documentation.exchange
+      credit: credit.exchange
+      proposal-notification: status.exchange
+      documentation-document: document.exchange
+      analyzed-credit: analyzed.exchange
 resilience4j:
   circuitbreaker:
     instances:

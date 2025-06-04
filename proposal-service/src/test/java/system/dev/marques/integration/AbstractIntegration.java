@@ -42,6 +42,10 @@ public class AbstractIntegration {
                 channel.queueDeclare("queue.proposal.delete", true, false, false, null);
                 channel.queueDeclare("queue.proposal", true, false, false, null);
                 channel.queueDeclare("queue.analyzed.credit", true, false, false, null);
+                channel.queueDeclare("queue.credit.analysis", true, false, false, null);
+                channel.queueDeclare("queue.proposal.status", true, false, false, null);
+                channel.queueDeclare("queue.documentation", true, false, false, null);
+
 
             } catch (Exception e) {
                 throw new RuntimeException("Error while trying to create queues for the integration tests", e);
