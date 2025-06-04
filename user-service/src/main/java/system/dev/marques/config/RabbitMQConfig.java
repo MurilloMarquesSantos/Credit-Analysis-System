@@ -21,45 +21,28 @@ public class RabbitMQConfig {
     private String documentDeletionQueueName;
 
     @Value("${spring.rabbitmq.queue.notification-created}")
-    private String notificationCreateQueue;
+    private String notificationCreateQueueName;
 
     @Value("${spring.rabbitmq.queue.notification-validation}")
-    private String notificationValidationQueue;
+    private String notificationValidationQueueName;
 
     @Value("${spring.rabbitmq.queue.notification-delete-user}")
-    private String notificationDeleteQueue;
+    private String notificationDeleteQueueName;
 
     @Value("${spring.rabbitmq.queue.notification-delete-confirmation}")
-    private String notificationConfirmationQueue;
-
-    @Value("${spring.rabbitmq.exchange.notification}")
-    private String notificationExchange;
-
-    @Value("${spring.rabbitmq.exchange.proposal}")
-    private String proposalExchangeName;
+    private String notificationConfirmationQueueName;
 
     @Value("${spring.rabbitmq.queue.documentation.receipt}")
     private String userReceiptQueueName;
 
-    @Value("${spring.rabbitmq.exchange.documentation}")
-    private String documentationExchangeName;
+    @Value("${spring.rabbitmq.queue.credit.analyzed-credit}")
+    private String analyzedCreditQueueName;
 
     @Value("${spring.rabbitmq.queue.proposal-delete}")
     private String proposalDeleteQueueName;
 
-
-    @Value("${spring.rabbitmq.queue.credit.analyzed-credit}")
-    private String analyzedCreditQueueName;
-
-    @Value("${spring.rabbitmq.exchange.analyzed-credit}")
-    private String analyzedCreditExchangeName;
-
     @Value("${spring.rabbitmq.queue.notification.proposal-receipt}")
     private String notificationQueueName;
-
-    @Value("${spring.rabbitmq.exchange.notification-receipt}")
-    private String notificationExchangeName;
-
 
     @Value("${spring.rabbitmq.queue.documentation.documentation-info}")
     private String documentQueueName;
@@ -70,6 +53,12 @@ public class RabbitMQConfig {
     @Value("${spring.rabbitmq.queue.notification.proposal-status}")
     private String notificationStatusQueueName;
 
+    @Value("${spring.rabbitmq.exchange.analyzed-credit}")
+    private String analyzedCreditExchangeName;
+
+    @Value("${spring.rabbitmq.exchange.notification-receipt}")
+    private String notificationExchangeName;
+
     @Value("${spring.rabbitmq.exchange.credit}")
     private String crediteExchangeName;
 
@@ -79,34 +68,42 @@ public class RabbitMQConfig {
     @Value("${spring.rabbitmq.exchange.documentation-document}")
     private String documentExchangeName;
 
+    @Value("${spring.rabbitmq.exchange.notification}")
+    private String notificationExchange;
+
+    @Value("${spring.rabbitmq.exchange.proposal}")
+    private String proposalExchangeName;
+
+    @Value("${spring.rabbitmq.exchange.documentation}")
+    private String documentationExchangeName;
+
     @Bean
     public Queue userValidationQueue() {
-        return QueueBuilder.durable(notificationValidationQueue).build();
+        return QueueBuilder.durable(notificationValidationQueueName).build();
     }
 
     @Bean
     public Queue userCreatedQueue() {
-        return QueueBuilder.durable(notificationCreateQueue).build();
+        return QueueBuilder.durable(notificationCreateQueueName).build();
     }
 
     @Bean
     public Queue proposalDeleteQueue() {
         return QueueBuilder.durable(proposalDeleteQueueName).build();
     }
+
     @Bean
     public Queue userDeleteQueue() {
-        return QueueBuilder.durable(notificationDeleteQueue).build();
+        return QueueBuilder.durable(notificationDeleteQueueName).build();
     }
 
     @Bean
     public Queue userConfirmationQueue() {
-        return QueueBuilder.durable(notificationConfirmationQueue).build();
+        return QueueBuilder.durable(notificationConfirmationQueueName).build();
     }
 
     @Bean
-    public Queue proposalQueue() {
-        return QueueBuilder.durable(proposalQueueName).build();
-    }
+    public Queue proposalQueue() {return QueueBuilder.durable(proposalQueueName).build();}
 
     @Bean
     public Queue documentationQueue() {
@@ -124,9 +121,51 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    public DirectExchange analyzedCreditExchange() {
-        return new DirectExchange(analyzedCreditExchangeName);
+    public Queue notificationQueue() {
+        return QueueBuilder.durable(notificationQueueName).build();
     }
+
+    @Bean
+    public Queue creditQueueProposal() {return QueueBuilder.durable(creditQueueName).build();}
+
+    @Bean
+    public Queue notificationQueueProposal() {return QueueBuilder.durable(notificationStatusQueueName).build();}
+
+    @Bean
+    public Queue documentationQueueProposal() {return QueueBuilder.durable(documentQueueName).build();}
+
+    @Bean
+    public DirectExchange documentExchangeProposal() {return new DirectExchange(documentExchangeName);}
+
+    @Bean
+    public DirectExchange creditExchangeProposal() {return new DirectExchange(crediteExchangeName);}
+
+    @Bean
+    public DirectExchange notificationExchangeProposal() {return new DirectExchange(notificationExchangeNameProposal);}
+
+    @Bean
+    public DirectExchange analyzedCreditExchange() {return new DirectExchange(analyzedCreditExchangeName);}
+
+    @Bean
+    public TopicExchange documentationExchange() {
+        return new TopicExchange(documentationExchangeName);
+    }
+
+    @Bean
+    public TopicExchange notificationTopicExchange() {
+        return new TopicExchange(notificationExchange);
+    }
+
+    @Bean
+    public TopicExchange proposalExchange() {
+        return new TopicExchange(proposalExchangeName);
+    }
+
+    @Bean
+    public DirectExchange notificationExchange() {
+        return new DirectExchange(notificationExchangeName);
+    }
+
 
     @Bean
     public Binding bindingAnalyzedCredit() {
@@ -134,36 +173,6 @@ public class RabbitMQConfig {
                 .bind(analyzedCreditQueue())
                 .to(analyzedCreditExchange())
                 .with("analyzed-credit.queue");
-    }
-
-    @Bean
-    public Queue creditQueueProposal() {
-        return QueueBuilder.durable(creditQueueName).build();
-    }
-
-    @Bean
-    public Queue notificationQueueProposal() {
-        return QueueBuilder.durable(notificationStatusQueueName).build();
-    }
-
-    @Bean
-    public Queue documentationQueueProposal() {
-        return QueueBuilder.durable(documentQueueName).build();
-    }
-
-    @Bean
-    public DirectExchange documentExchangeProposal() {
-        return new DirectExchange(documentExchangeName);
-    }
-
-    @Bean
-    public DirectExchange creditExchangeProposal() {
-        return new DirectExchange(crediteExchangeName);
-    }
-
-    @Bean
-    public DirectExchange notificationExchangeProposal() {
-        return new DirectExchange(notificationExchangeNameProposal);
     }
 
     @Bean
@@ -190,15 +199,6 @@ public class RabbitMQConfig {
                 .with("document.queue");
     }
 
-    @Bean
-    public Queue notificationQueue() {
-        return QueueBuilder.durable(notificationQueueName).build();
-    }
-
-    @Bean
-    public DirectExchange notificationExchange() {
-        return new DirectExchange(notificationExchangeName);
-    }
 
     @Bean
     public Binding notificationBinding() {
@@ -206,21 +206,6 @@ public class RabbitMQConfig {
                 .bind(notificationQueue())
                 .to(notificationExchange())
                 .with("notification.queue");
-    }
-
-    @Bean
-    public TopicExchange documentationExchange() {
-        return new TopicExchange(documentationExchangeName);
-    }
-
-    @Bean
-    public TopicExchange notificationTopicExchange() {
-        return new TopicExchange(notificationExchange);
-    }
-
-    @Bean
-    public TopicExchange proposalExchange() {
-        return new TopicExchange(proposalExchangeName);
     }
 
     @Bean
