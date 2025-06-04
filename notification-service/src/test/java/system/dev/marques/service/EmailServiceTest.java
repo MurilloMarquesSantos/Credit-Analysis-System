@@ -79,6 +79,7 @@ class EmailServiceTest {
 
     @Test
     void sendUserDeleteFormEmail_SendsEmail_WhenSuccessful() {
+        ReflectionTestUtils.setField(emailService, "email", "email@test.com");
 
         DeleteUserDto dto = createDeleteUserDto();
 
@@ -135,7 +136,7 @@ class EmailServiceTest {
 
         ProposalStatusEmailDto dto = createProposalStatusEmailDto();
 
-        dto.setStatus("REJECTED");
+        dto.setStatus("APPROVED");
 
         assertThatCode(() -> emailService.sendProposalStatusEmail(dto)).doesNotThrowAnyException();
 
