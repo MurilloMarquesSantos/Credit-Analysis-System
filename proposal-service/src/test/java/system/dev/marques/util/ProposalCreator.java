@@ -32,4 +32,19 @@ public class ProposalCreator {
                 .build();
 
     }
+
+    public static Proposal createSavedProposal() {
+        return Proposal.builder()
+                .id(1L)
+                .userId(1L)
+                .cpf("12345678900")
+                .userEmail("murillo@gmail.com")
+                .userName("Murillo")
+                .userIncome(5000.0)
+                .requestedAmount(10000.0)
+                .installments(12)
+                .purpose("buy a car")
+                .status(ProposalStatus.PENDING)
+                .build();
+    }
 }
