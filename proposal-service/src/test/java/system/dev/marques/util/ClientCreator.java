@@ -26,4 +26,5 @@ public class ClientCreator {
                 .scope("ADMIN")
                 .build();
     }
+
 }

@@ -44,6 +44,7 @@ class ClientControllerIT extends AbstractIntegration {
     void setUp() {
 
         Client client = clientCreator.createClient();
+
         clientRepository.save(client);
 
 
