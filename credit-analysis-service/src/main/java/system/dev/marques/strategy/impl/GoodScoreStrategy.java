@@ -9,7 +9,7 @@ import system.dev.marques.strategy.CreditAnalysisStrategy;
 public class GoodScoreStrategy implements CreditAnalysisStrategy {
     @Override
     public boolean supports(int score) {
-        return score >= 700 && score <= 950;
+        return score >= 701 && score <= 949;
     }
 
     @Override

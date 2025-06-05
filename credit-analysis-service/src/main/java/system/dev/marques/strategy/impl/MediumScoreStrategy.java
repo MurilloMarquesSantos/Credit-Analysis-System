@@ -21,7 +21,6 @@ public class MediumScoreStrategy implements CreditAnalysisStrategy {
             return approve(proposalId, cpf);
         }
 
-
         double maxMultiplier;
         if (installments >= 50){
             maxMultiplier = 1.7;
