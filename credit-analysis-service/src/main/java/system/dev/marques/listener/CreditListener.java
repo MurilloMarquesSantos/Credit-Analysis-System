@@ -11,6 +11,7 @@ import system.dev.marques.service.ProducerService;
 @Service
 @RequiredArgsConstructor
 public class CreditListener {
+
     private final CreditAnalysisService creditAnalysisService;
 
     private final ProducerService producerService;
