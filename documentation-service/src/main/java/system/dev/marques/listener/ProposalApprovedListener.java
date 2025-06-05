@@ -24,7 +24,7 @@ public class ProposalApprovedListener {
     }
 
     @RabbitListener(queues = "queue.user.deletion")
-    public void listenDocumentUserQueue(Long id) {
+    public void listenDocumentUserQueueDelete(Long id) {
         s3Service.deleteUserFolder(id);
     }
 }
