@@ -34,12 +34,24 @@ public class SecurityConfig {
     @Value("${jwt.private.key}")
     private RSAPrivateKey privateKey;
 
+    private static final String[] ALLOWED_ENDPOINTS = {
+            "/v2/api-docs/**",
+            "/v3/api-docs/**",
+            "/swagger-resources/**",
+            "/swagger-ui.html",
+            "/swagger-ui/**",
+            "/webjars/**",
+            "/actuator/**"
+    };
+
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, JwtValidationFilter jwtValidationFilter,
                                            SocialLoginSuccessHandler successHandler) throws Exception {
         http.authorizeHttpRequests(auth -> auth
                         .requestMatchers("/home/create").permitAll()
                         .requestMatchers("/home/admin/**").hasRole("ADMIN")
+                        .requestMatchers(ALLOWED_ENDPOINTS).permitAll()
                         .anyRequest().authenticated())
                 .formLogin(form -> form.loginPage("/login").permitAll())
                 .csrf(AbstractHttpConfigurer::disable)
