@@ -209,9 +209,7 @@ class UserControllerIT extends AbstractIntegration {
                 .when()
                 .post()
                 .then()
-                .log().all()
-                .statusCode(400)
-                .log().all();
+                .statusCode(400);
     }
 
     @Test
@@ -347,9 +345,7 @@ class UserControllerIT extends AbstractIntegration {
                 .when()
                 .post()
                 .then()
-                .log().all()
                 .statusCode(200)
-                .log().all()
                 .extract()
                 .body().asString();
 
