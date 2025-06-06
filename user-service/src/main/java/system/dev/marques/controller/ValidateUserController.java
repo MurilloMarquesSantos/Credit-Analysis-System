@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import system.dev.marques.domain.dto.requests.UserEnableRequest;
 import system.dev.marques.domain.dto.requests.UserRequestGoogle;
 import system.dev.marques.domain.dto.responses.UserEnabledResponse;
-import system.dev.marques.domain.dto.responses.UserResponse;
 import system.dev.marques.service.UserService;
 
 import java.security.Principal;
@@ -31,7 +30,8 @@ public class ValidateUserController {
     @Operation(summary = "Enable user", description = "Retrieve Enabled User.",
             tags = {"Activation"})
     @ApiResponse(responseCode = "201", description = "User created via Google enabled successfully",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponse.class)))
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = UserEnabledResponse.class)))
     @ApiResponse(responseCode = "401", description = "Unauthorized – token missing or invalid",
             content = @Content(
                     mediaType = "application/json",
@@ -55,7 +55,8 @@ public class ValidateUserController {
     @Operation(summary = "Enable user", description = "Retrieve Enabled User.",
             tags = {"Activation"})
     @ApiResponse(responseCode = "201", description = "User created via Form enabled successfully",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponse.class)))
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = UserEnabledResponse.class)))
     @ApiResponse(responseCode = "401", description = "Unauthorized – token missing or invalid",
             content = @Content(
                     mediaType = "application/json",

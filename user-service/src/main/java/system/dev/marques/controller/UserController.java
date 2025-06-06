@@ -69,7 +69,8 @@ public class UserController {
     @Operation(summary = "Get History", description = "Retrieve user proposal history.",
             tags = {"User"})
     @ApiResponse(responseCode = "200", description = "History retrieved successfully",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponse.class)))
+            content = @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = ProposalHistoryResponse.class)))
     @ApiResponse(responseCode = "401", description = "Unauthorized – token missing or invalid",
             content = @Content(
                     mediaType = "application/json",
@@ -86,7 +87,7 @@ public class UserController {
     @Operation(summary = "Request Receipt", description = "Sends receipt requisition.",
             tags = {"User"})
     @ApiResponse(responseCode = "200", description = "Request processed successfully",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponse.class)))
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class)))
     @ApiResponse(responseCode = "401", description = "Unauthorized – token missing or invalid",
             content = @Content(
                     mediaType = "application/json",
@@ -99,7 +100,7 @@ public class UserController {
     @Operation(summary = "Request User Deletion", description = "Sends receipt requisition.",
             tags = {"User"})
     @ApiResponse(responseCode = "200", description = "Request processed successfully",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponse.class)))
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class)))
     @ApiResponse(responseCode = "401", description = "Unauthorized – token missing or invalid",
             content = @Content(
                     mediaType = "application/json",

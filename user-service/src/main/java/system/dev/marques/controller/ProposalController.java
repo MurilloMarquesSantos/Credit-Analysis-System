@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import system.dev.marques.domain.dto.proposal.ProposalRequest;
-import system.dev.marques.domain.dto.responses.UserResponse;
 import system.dev.marques.service.ProposalService;
 
 import java.security.Principal;
@@ -32,7 +31,7 @@ public class ProposalController {
     @Operation(summary = "Submit Proposal", description = "Submit proposal requisition.",
             tags = {"Proposal"})
     @ApiResponse(responseCode = "200", description = "Request processed successfully",
-            content = @Content(mediaType = "application/json", schema = @Schema(implementation = UserResponse.class)))
+            content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class)))
     @ApiResponse(responseCode = "401", description = "Unauthorized – token missing or invalid",
             content = @Content(
                     mediaType = "application/json",
