@@ -25,11 +25,11 @@ spring:
           client-credentials-client:
             client-id: ${CLIENT_ID}
             client-secret: ${CLIENT_SECRET}
-            authorization-grant-type: ${CLIENT_GRANT_TYPE}
-            scope: ${CLIENT_SCOPE}
+            authorization-grant-type: client_credentials
+            scope: ADMIN
         provider:
           client-credentials-client:
-            token-uri: http://localhost:8081/oauth2/token
+            token-uri: ${TOKEN_URI:http://localhost:8081/oauth2/token}
   rabbitmq:
     host: localhost
     port: 5672
