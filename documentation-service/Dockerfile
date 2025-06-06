@@ -12,7 +12,7 @@ WORKDIR /app
 
 COPY --from=build ./build/target/*.jar ./documentservice.jar
 
-EXPOSE 8081
+EXPOSE 8083
 
 ENV ACCESS_KEY=""
 ENV SECRET_KEY=""

@@ -12,7 +12,7 @@ WORKDIR /app
 
 COPY --from=build ./build/target/*.jar ./creditservice.jar
 
-EXPOSE 8081
+EXPOSE 8082
 
 ENV RABBIT_USER=""
 ENV RABBIT_PASSWORD=""

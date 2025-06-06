@@ -9,7 +9,7 @@ spring:
   application:
     name: user-service
   datasource:
-    url: jdbc:mysql://127.0.0.1:3307/userSystem?createDatabaseIfNotExist=true
+    url: ${MYSQL_URL:jdbc:mysql://127.0.0.1:3307/userSystem?createDatabaseIfNotExist=true}
     username: ${MYSQL_PASS}
     password: ${MYSQL_PASS}
   jpa:
