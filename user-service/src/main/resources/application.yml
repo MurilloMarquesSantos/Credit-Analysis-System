@@ -82,3 +82,18 @@ resilience4j:
 proposal:
   service:
     url: http://localhost:8081
+
+management:
+  info:
+    env:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: info, health, metrics, prometheus
+  metrics:
+    tags:
+      application: ${spring.application.name}
+info:
+  app: Credit System API
+  github: https://github.com/MurilloMarquesSantos/Credit-Analysis-System
