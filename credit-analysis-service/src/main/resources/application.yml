@@ -4,7 +4,7 @@ spring:
   application:
     name: credit-analysis-application
   rabbitmq:
-    host: localhost
+    host: ${RABBIT_HOST:localhost}
     port: 5672
     username: ${RABBIT_USER}
     password: ${RABBIT_PASSWORD}

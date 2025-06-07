@@ -31,7 +31,7 @@ spring:
           client-credentials-client:
             token-uri: ${TOKEN_URI:http://localhost:8081/oauth2/token}
   rabbitmq:
-    host: localhost
+    host: ${RABBIT_HOST:localhost}
     port: 5672
     username: ${RABBIT_USER}
     password: ${RABBIT_PASSWORD}
@@ -81,7 +81,7 @@ resilience4j:
 
 proposal:
   service:
-    url: http://localhost:8081
+    url: ${BASE_URL:http://localhost:8081}
 
 management:
   info:
