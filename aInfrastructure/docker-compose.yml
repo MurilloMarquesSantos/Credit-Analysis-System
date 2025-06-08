@@ -1,0 +1,149 @@
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmqCredit
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    networks:
+      - creditapp-network
+
+  user-database:
+    image: mysql
+    container_name: userData-container
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_DATABASE: userSystem
+      MYSQL_ROOT_PASSWORD: root
+    networks:
+      - creditapp-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  proposal-database:
+    image: mysql
+    container_name: proposalData-container
+    ports:
+      - "3308:3306"
+    environment:
+      MYSQL_DATABASE: proposalSystem
+      MYSQL_ROOT_PASSWORD: root
+    networks:
+      - creditapp-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-proot"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  user-service:
+    image: murillodv/userservice:v3
+    container_name: user-service
+    ports:
+      - "8080:8080"
+    environment:
+      MYSQL_URL: jdbc:mysql://userData-container:3306/userSystem
+      MYSQL_PASS: root
+      GOOGLE_CLIENT:
+      GOOGLE_SECRET:
+      CLIENT_ID: userserviceclient
+      CLIENT_SECRET: userservicesecret
+      RABBIT_USER: guest
+      RABBIT_PASSWORD: guest
+      RABBIT_HOST: rabbitmqCredit
+      TOKEN_URI: http://proposal-service:8081/oauth2/token
+      BASE_URL: http://proposal-service:8081
+    depends_on:
+      user-database:
+        condition: service_healthy
+      proposal-database:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_started
+    networks:
+      - creditapp-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 20s
+
+  proposal-service:
+    image: murillodv/proposalservice:v1
+    container_name: proposal-service
+    ports:
+      - "8081:8081"
+    environment:
+      MYSQL_URL: jdbc:mysql://proposalData-container:3306/proposalSystem
+      MYSQL_PASS: root
+      RABBIT_USER: guest
+      RABBIT_PASSWORD: guest
+      RABBIT_HOST: rabbitmqCredit
+    depends_on:
+      user-service:
+        condition: service_healthy
+      proposal-database:
+        condition: service_started
+    networks:
+      - creditapp-network
+
+  credit-service:
+    image: murillodv/creditservice:v1
+    container_name: credit-service
+    ports:
+      - "8082:8082"
+    environment:
+      RABBIT_USER: guest
+      RABBIT_PASSWORD: guest
+      RABBIT_HOST: rabbitmqCredit
+    depends_on:
+      user-service:
+        condition: service_healthy
+    networks:
+      - creditapp-network
+
+  document-service:
+    image: murillodv/documentservice:v1
+    container_name: document-service
+    ports:
+      - "8083:8083"
+    environment:
+      ACCESS_KEY:
+      SECRET_KEY:
+      RABBIT_USER: guest
+      RABBIT_PASSWORD: guest
+      RABBIT_HOST: rabbitmqCredit
+    depends_on:
+      user-service:
+        condition: service_healthy
+    networks:
+      - creditapp-network
+
+  notification-service:
+    image: murillodv/notificationservice:v1
+    container_name: notification-service
+    ports:
+      - "8084:8084"
+    environment:
+      EMAIL:
+      EMAIL_PASSWORD:
+      RABBIT_USER: guest
+      RABBIT_PASSWORD: guest
+      RABBIT_HOST: rabbitmqCredit
+    depends_on:
+      user-service:
+        condition: service_healthy
+    networks:
+      - creditapp-network
+
+networks:
+  creditapp-network:
+    driver: bridge
