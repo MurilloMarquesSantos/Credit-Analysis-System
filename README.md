@@ -34,7 +34,7 @@ then forwards them for analysis.
 - 🔐 User registration and authentication (traditional and social login with Google)  
   On the first Google login, only the user's email and a default password are stored in the database.  
   A temporary validation link is sent via email, allowing the user to complete missing data 
-- (name, CPF, password, and income) to become a valid user.
+  (name, CPF, password, and income) to become a valid user.
 - 📧 Email notifications for validation, proposal status, and document download (via JavaMail)
 - 📄 PDF receipt generation for approved proposals
 - ☁️ Integration with AWS S3 for uploading and retrieving receipts
@@ -100,7 +100,7 @@ No manual dependency installation is required — all services run via Docker Co
 
 ### 🐳 Step 1: Run Docker Compose
 
-Download and use this `docker-compose.yml` file: [Docker file](https://raw.githubusercontent.com/murillomsantos/Credit-Analysis-System/main/system/aInfrastructure/docker-compose.yml
+Download and use this `docker-compose.yml` file: [Docker file](https://raw.githubusercontent.com/murillomsantos/system/main/system/aInfrastructure/docker-compose.yml
 )
 
 **⚠️ Before running, set the following environment variables in the file:**
