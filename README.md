@@ -100,7 +100,7 @@ No manual dependency installation is required — all services run via Docker Co
 
 ### 🐳 Step 1: Run Docker Compose
 
-Download and use this `docker-compose.yml` file: [Docker file](https://raw.githubusercontent.com/murillomsantos/system/main/aInfrastructure/docker-compose.yml
+Download and use this `docker-compose.yml` file: [Docker file](https://raw.githubusercontent.com/murillomsantos/system/aInfrastructure/docker-compose.yml
 )
 
 **⚠️ Before running, set the following environment variables in the file:**
