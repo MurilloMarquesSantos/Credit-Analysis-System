@@ -161,6 +161,7 @@ Once everything is set up, open the API documentation:
 
 Murillo Marques 
 
-[Linkedin](http://www.linkedin.com/in/murillomsantos)
+A LinkedIn post demonstrates the main flow of this API — feel free to check it out:
+[LinkedIn Post](https://www.linkedin.com/posts/murillomsantos_java-springboot-microservices-activity-7337858199854690304-muoc?utm_source=share&utm_medium=member_desktop&rcm=ACoAAEm78XQBn0Ebv8iPassLPWCniriMQZmgxCE)
 
 [Email](mailto:murillomarques2001@gmail.com)
