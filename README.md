@@ -26,7 +26,7 @@ then forwards them for analysis.
 - **documentation-service:** Generates PDF receipts for "**APPROVED**" proposals, uploads them to AWS S3, and sends the
   download link to the notification-service.
 
-- **Tests:** Tests: Includes 244 unit and integration tests, with 100% code coverage.
+- **Tests:** Includes 244 unit and integration tests, with 100% code coverage.
 
 
 # ✨ Features
